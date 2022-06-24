@@ -13,47 +13,74 @@ public class Server {
 
     private static final Logger logger = Logger.getLogger(Server.class.getName());
 
-    public static final int DEFAULT_PORT = 8080;
+    public static final int DEFAULT_PORT = 9000;
+    public static final int MAX_PLAYERS = 3;
 
+    private final ExecutorService fixedPool;
     private ServerSocket serverSocket = null;
-    private Socket playerSocket;
     private Player player;
-    private BufferedReader inputBufferedReader;
-    private BufferedWriter outputBufferedWriter;
+    private CopyOnWriteArrayList<Player> players;
+    private int portNumber;
 
 
-    public void listen(int port) {
+    public Server(int portNumber) {
+        players = new CopyOnWriteArrayList<>();
+        fixedPool = Executors.newFixedThreadPool(MAX_PLAYERS);
+        this.portNumber = portNumber;
+    }
 
-        ExecutorService playersPool = Executors.newFixedThreadPool(2);
+
+    public void init() {
+
+
         try {
-            serverSocket = new ServerSocket(port);
-            System.out.println("server listening on port " + port);
+            serverSocket = new ServerSocket(portNumber);
+            System.out.println("server listening on port " + portNumber);
+            logger.log(Level.INFO, "server bind to " + getAddress());
 
-            while (true) {
-                playerSocket = serverSocket.accept();
+            while (players.size() < MAX_PLAYERS) {
+
+                Socket playerSocket = serverSocket.accept();
                 player = new Player(playerSocket);
-                inputBufferedReader = new BufferedReader(new InputStreamReader(playerSocket.getInputStream()));
-                outputBufferedWriter = new BufferedWriter(new OutputStreamWriter(playerSocket.getOutputStream()));
+                System.out.println("Connection Established");
+                Player player = new Player(playerSocket);
+                players.add(player);
 
-                logger.log(Level.INFO, "server bind to " + getAddress());
-
-                playersPool.submit(player);
-
-                System.out.println(player.getName());
-
-                // System.out.println(player.getAddress());
-
-                String line = inputBufferedReader.readLine();
-                outputBufferedWriter.write(line);
-                System.out.println(line);
 
             }
+
+            System.out.println("All 3 players in");
+
         } catch (IOException e) {
 
-            logger.log(Level.SEVERE, "could not bind to port " + port);
+            logger.log(Level.SEVERE, "could not bind to port " + portNumber);
             logger.log(Level.SEVERE, e.getMessage());
             System.exit(1);
         }
+
+    }
+
+    public void start() {
+
+        System.out.println("START");
+
+        for (Player player : players) {
+
+            fixedPool.submit(player);
+        }
+
+        while (true) {
+
+            broadcast("hello");
+        }
+    }
+
+
+    private synchronized void broadcast(String message) {
+        for (Player player : players) {
+            player.receiveMessage(message);
+        }
+
     }
 
 
@@ -68,89 +95,3 @@ public class Server {
 
 
 }
-
-
-package org.academiadecodigo.cunnilinux;
-
-        import jdk.nashorn.internal.ir.WhileNode;
-
-        import java.io.*;
-        import java.net.ServerSocket;
-        import java.net.Socket;
-        import java.util.LinkedList;
-        import java.util.Vector;
-        import java.util.concurrent.CopyOnWriteArrayList;
-        import java.util.concurrent.ExecutorService;
-        import java.util.concurrent.Executors;
-
-public class ChatServer {
-
-    private final ExecutorService fixedPool;
-    private CopyOnWriteArrayList<ChatClient> clientList;
-    private static int portNumber;
-    ServerSocket serverSocket;
-
-
-    public ChatServer(int portNumber) {
-        clientList = new CopyOnWriteArrayList<>();
-        fixedPool = Executors.newFixedThreadPool(3);
-        ChatServer.portNumber = portNumber;
-        start();
-
-
-    }
-
-
-    public static void main(String[] args) {
-        new ChatServer(9000);
-
-    }
-
-
-    public void start() {
-
-        ServerSocket serverSocket = null;
-        try {
-
-            serverSocket = new ServerSocket(portNumber);
-            while (true) {
-
-                Socket clientSocket = serverSocket.accept();
-                System.out.println("Connection Established");
-                ChatClient chatClient = new ChatClient(clientSocket, this);
-                clientList.add(chatClient);
-                fixedPool.submit(chatClient);
-                broadCast("hello");
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-
-    }
-
-
-    /*public void clientLeave(Socket clientSocket) {
-        broadCast(clientSocket + "left the chat!!!", clientSocket);
-        this.clientList.remove(clientSocket);
-    }
-*/
-    private synchronized void broadCast(String message) {
-        for (ChatClient chatClient : clientList) {
-            chatClient.receiveMessage(message);
-        }
-
-    }
-}
-
-
-
-
-
-
-
-
-
-
-
-
