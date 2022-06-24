@@ -2,7 +2,6 @@ package org.academiadecodigo.cunnilinux.hangman;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,16 +17,19 @@ public class Player implements Runnable {
     //private final Server server;
 
     public Player(Socket playerSocket) {
+
         this.playerSocket = playerSocket;
+
         try {
             terminalIn = new BufferedReader(new InputStreamReader(System.in));
             in = new BufferedReader(new InputStreamReader(playerSocket.getInputStream()));
-            out = new BufferedWriter(new OutputStreamWriter( playerSocket.getOutputStream()));
+            out = new BufferedWriter(new OutputStreamWriter(playerSocket.getOutputStream()));
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
 
+            throw new RuntimeException(e);
+
+        }
     }
 
 
@@ -38,13 +40,9 @@ public class Player implements Runnable {
     @Override
     public void run() {
 
-
         while (!this.playerSocket.isClosed()) {
-            try {
-                sendMessage();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+
+            sendMessage();
 
         }
 
@@ -78,33 +76,31 @@ public class Player implements Runnable {
     }*/
 
 
-
     public void receiveMessage(String message) throws IOException {
 
         out.write(message);
 
-
     }
 
-    public synchronized void sendMessage() throws IOException {
-        out.write("Welcome my dear friend. How can i assist u?");
+    public synchronized void sendMessage() {
 
-        String lanzas = null;
+        String userName = null;
 
         try {
+            out.write("Welcome my dear friend. How can i assist u?");
             out.write("pls write your name");
-            lanzas = in.readLine();
+            userName = in.readLine();
             // while (true) {
             String message = in.readLine();
-            out.write(lanzas + ": " + message);
-            System.out.println(message);
+            out.write(userName + ": " + message);
+            //System.out.println(message);
 
             //}
         } catch (IOException e) {
+
             throw new RuntimeException(e);
+
         }
-
-
     }
 
     private void close() {
@@ -120,8 +116,4 @@ public class Player implements Runnable {
         }
 
     }
-
-
 }
-
-

@@ -13,11 +13,9 @@ public class Main {
 
         } catch (NumberFormatException e) {
 
-            System.err.println("Usage: WebServer [PORT]");
+            System.err.println("Usage: Server [PORT]");
             System.exit(1);
 
         }
-
-
     }
 }
