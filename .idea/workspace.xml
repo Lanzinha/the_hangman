@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="78ce12e5-f329-4701-9de7-7a1cef9cb50d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/org/academiadecodigo/cunnilinux/hangman/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/academiadecodigo/cunnilinux/hangman/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/org/academiadecodigo/cunnilinux/hangman/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/academiadecodigo/cunnilinux/hangman/Player.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/org/academiadecodigo/cunnilinux/hangman/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/academiadecodigo/cunnilinux/hangman/Server.java" afterDir="false" />
     </list>
@@ -70,7 +69,7 @@
       <workItem from="1656092447568" duration="587000" />
       <workItem from="1656104343469" duration="2000" />
       <workItem from="1656104351963" duration="1000" />
-      <workItem from="1656104375570" duration="3379000" />
+      <workItem from="1656104375570" duration="5278000" />
     </task>
     <servers />
   </component>

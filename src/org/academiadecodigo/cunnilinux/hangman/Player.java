@@ -12,7 +12,7 @@ public class Player implements Runnable {
     private String name;
     private Socket playerSocket;
 
-    private PrintWriter out;
+    private BufferedWriter out;
     private BufferedReader terminalIn;
     private BufferedReader in;
     //private final Server server;
@@ -22,7 +22,7 @@ public class Player implements Runnable {
         try {
             terminalIn = new BufferedReader(new InputStreamReader(System.in));
             in = new BufferedReader(new InputStreamReader(playerSocket.getInputStream()));
-            out = new PrintWriter(playerSocket.getOutputStream());
+            out = new BufferedWriter(new OutputStreamWriter( playerSocket.getOutputStream()));
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -39,17 +39,16 @@ public class Player implements Runnable {
     public void run() {
 
 
-        /*try {
+        while (!this.playerSocket.isClosed()) {
+            try {
+                sendMessage();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
 
-            BufferedReader in = null;
-            in = new BufferedReader(new InputStreamReader(this.clientSocket.getInputStream()));
-            while (!this.clientSocket.isClosed()) {
-                String message = in.readLine();
-                //if (in == null) {
-                //server.clientLeave(this.clientSocket);
+        }
 
-
-            } catch(SocketException ex){
+           /* } catch(SocketException ex){
 
                 logger.log(Level.INFO, "client disconnected " + getAddress());
 
@@ -57,10 +56,10 @@ public class Player implements Runnable {
 
                 logger.log(Level.WARNING, ex.getMessage());
                 close();
-            }
+            }*/
 
 
-        }*/
+    }
         /* private void start() throws IOException {
         System.out.println(serverReply.readLine());
         out.println(terminalIn.readLine());
@@ -78,49 +77,51 @@ public class Player implements Runnable {
         clientSocket.close();
     }*/
 
+
+
+    public void receiveMessage(String message) throws IOException {
+
+        out.write(message);
+
+
     }
 
-        public void receiveMessage (String message){
+    public synchronized void sendMessage() throws IOException {
+        out.write("Welcome my dear friend. How can i assist u?");
 
-            out.println(message);
+        String lanzas = null;
 
+        try {
+            out.write("pls write your name");
+            lanzas = in.readLine();
+            // while (true) {
+            String message = in.readLine();
+            out.write(lanzas + ": " + message);
+            System.out.println(message);
 
-        }
-
-        public synchronized void sendMessage () {
-            out.println("Welcome my dear friend. How can i assist u?");
-            String lanzas = null;
-            try {
-                out.println("pls write your name");
-                lanzas = in.readLine();
-                // while (true) {
-                String message = in.readLine();
-                out.println(lanzas + ": " + message);
-                System.out.println(message);
-
-                //}
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-
-        }
-
-        private void close () {
-
-            try {
-
-                logger.log(Level.INFO, "closing client socket for " + getAddress());
-                playerSocket.close();
-
-            } catch (IOException e) {
-
-                logger.log(Level.INFO, e.getMessage());
-            }
-
+            //}
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
 
 
     }
+
+    private void close() {
+
+        try {
+
+            logger.log(Level.INFO, "closing client socket for " + getAddress());
+            playerSocket.close();
+
+        } catch (IOException e) {
+
+            logger.log(Level.INFO, e.getMessage());
+        }
+
+    }
+
+
+}
 
 

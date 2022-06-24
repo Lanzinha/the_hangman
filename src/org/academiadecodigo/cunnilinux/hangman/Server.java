@@ -45,6 +45,7 @@ public class Server {
                 System.out.println("Connection Established");
                 Player player = new Player(playerSocket);
                 players.add(player);
+                fixedPool.submit(player);
 
 
             }
@@ -64,34 +65,41 @@ public class Server {
 
         System.out.println("START");
 
-        for (Player player : players) {
 
-            fixedPool.submit(player);
-        }
+        //    fixedPool.submit(player);
+
 
         while (true) {
+            for (Player player : players) {
 
-            broadcast("hello");
-        }
-    }
+                try {
+                    player.sendMessage();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
 
-
-    private synchronized void broadcast(String message) {
-        for (Player player : players) {
-            player.receiveMessage(message);
-        }
-
-    }
-
-
-    private String getAddress() {
-
-        if (serverSocket == null) {
-            return null;
+                // broadcast("hello");
+            }
         }
 
-        return serverSocket.getInetAddress().getHostAddress() + ":" + serverSocket.getLocalPort();
     }
+        private synchronized void broadcast (String message) throws IOException {
+            for (Player player : players) {
+
+                player.receiveMessage(message);
+            }
+
+        }
 
 
-}
+        private String getAddress () {
+
+            if (serverSocket == null) {
+                return null;
+            }
+
+            return serverSocket.getInetAddress().getHostAddress() + ":" + serverSocket.getLocalPort();
+        }
+
+
+    }
