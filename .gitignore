@@ -1,9 +1,5 @@
 DS_STORE
-*.iml
 .idea/
-=======
-# Created by https://www.toptal.com/developers/gitignore/api/intellij,linux,macos,windows
-# Edit at https://www.toptal.com/developers/gitignore?templates=intellij,linux,macos,windows
 
 ### Intellij ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
@@ -46,7 +42,7 @@ DS_STORE
 # .idea/modules.xml
 # .idea/*.iml
 # .idea/modules
-# *.iml
+*.iml
 # *.ipr
 
 # CMake
