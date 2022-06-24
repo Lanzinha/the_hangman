@@ -16,7 +16,7 @@ public class Server {
 
     private ServerSocket serverSocket = null;
     private Socket playerSocket;
-    private Player playerDispatcher;
+    private Player player;
     private BufferedReader inputBufferedReader;
     private BufferedWriter outputBufferedWriter;
 
@@ -26,17 +26,21 @@ public class Server {
         ExecutorService playersPool = Executors.newFixedThreadPool(3);
         try {
             serverSocket = new ServerSocket(port);
+            System.out.println("server listening on port " + port);
 
             while (true) {
                 playerSocket = serverSocket.accept();
-                //playerDispatcher = new Player(playerSocket);
+                player = new Player(playerSocket);
                 inputBufferedReader = new BufferedReader(new InputStreamReader(playerSocket.getInputStream()));
                 outputBufferedWriter = new BufferedWriter(new OutputStreamWriter(playerSocket.getOutputStream()));
 
                 logger.log(Level.INFO, "server bind to " + getAddress());
 
-                //playersPool.submit(playerDispatcher);
+                playersPool.submit(player);
 
+                System.out.println(Thread.currentThread().getName());
+
+                // System.out.println(player.getAddress());
 
                 String line = inputBufferedReader.readLine();
                 outputBufferedWriter.write(line);
@@ -52,7 +56,6 @@ public class Server {
     }
 
 
-
     private String getAddress() {
 
         if (serverSocket == null) {
@@ -61,22 +64,6 @@ public class Server {
 
         return serverSocket.getInetAddress().getHostAddress() + ":" + serverSocket.getLocalPort();
     }
-
-    public class PlayerConnection implements Runnable{
-
-
-        Server webServer;
-        Player playerDispatcher;
-
-
-        @Override
-        public void run() {
-
-        }
-    }
-
-
-
 
 
 }
