@@ -23,7 +23,7 @@ public class Server {
 
     public void listen(int port) {
 
-        ExecutorService playersPool = Executors.newFixedThreadPool(3);
+        ExecutorService playersPool = Executors.newFixedThreadPool(2);
         try {
             serverSocket = new ServerSocket(port);
             System.out.println("server listening on port " + port);
@@ -38,7 +38,7 @@ public class Server {
 
                 playersPool.submit(player);
 
-                System.out.println(Thread.currentThread().getName());
+                System.out.println(player.getName());
 
                 // System.out.println(player.getAddress());
 

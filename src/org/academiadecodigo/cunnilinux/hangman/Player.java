@@ -9,15 +9,17 @@ import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Player implements Runnable{
+public class Player implements Runnable {
     private static final Logger logger = Logger.getLogger(Player.class.getName());
 
+    private String name;
     private Socket playerSocket;
     private DataOutputStream out;
     private BufferedReader in;
 
     public Player(Socket playerSocket) {
         this.playerSocket = playerSocket;
+        this.name = "tiago";
     }
 
     public String getAddress() {
@@ -26,6 +28,7 @@ public class Player implements Runnable{
 
     @Override
     public void run() {
+
 
         try {
 
@@ -45,8 +48,9 @@ public class Player implements Runnable{
 
     }
 
-
-
+    public String getName() {
+        return name;
+    }
 
 
     private void reply(String response) throws IOException {
@@ -66,7 +70,6 @@ public class Player implements Runnable{
         }
 
     }
-
 
 
 }
