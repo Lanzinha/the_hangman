@@ -2,11 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="78ce12e5-f329-4701-9de7-7a1cef9cb50d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/The_Hangman.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/academiadecodigo/cunnilinux/hangman/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/academiadecodigo/cunnilinux/hangman/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/academiadecodigo/cunnilinux/hangman/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/academiadecodigo/cunnilinux/hangman/Server.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,6 +25,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
+    "nodejs_package_manager_path": "npm",
     "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0"
@@ -61,7 +59,11 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1656087854119</updated>
+      <workItem from="1656087856733" duration="1009000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
 </project>
