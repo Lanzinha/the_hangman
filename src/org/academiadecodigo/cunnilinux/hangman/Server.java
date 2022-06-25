@@ -59,10 +59,11 @@ public class Server {
         }
     }
 
-    public synchronized void broadcastMessage(String message) throws IOException {
+    public synchronized void broadcastMessage(Player senderPlayer, String message) throws IOException {
 
         for (Player player : players) {
 
+            if(!senderPlayer.getPlayerName().equals())
             player.sendMessage(message);
 
         }

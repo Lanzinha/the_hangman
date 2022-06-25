@@ -53,7 +53,7 @@ public class Player implements Runnable {
 
             try {
 
-                server.broadcastMessage(readMessage());
+                server.broadcastMessage(this, readMessage());
 
             } catch (IOException e) {
 
@@ -117,6 +117,13 @@ public class Player implements Runnable {
         out.write("Welcome to The Hangman my dear friend. How can I assist you? \n");
         sendMessage("Please input your username: ");
         playerName = in.readLine();
+
+    }
+
+
+    public String getPlayerName() {
+
+        return playerName;
 
     }
 }
