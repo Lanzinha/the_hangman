@@ -40,11 +40,9 @@ public class Player implements Runnable {
 
             setName();
 
-            String line;
             while (!quit) {
 
-                line = receiveMessage();
-                server.broadcast(line);
+                server.broadcast(receiveMessage());
 
             }
 
