@@ -1,4 +1,30 @@
 package org.academiadecodigo.cunnilinux.hangman;
 
+import org.academiadecodigo.bootcamp.Prompt;
+import org.academiadecodigo.bootcamp.scanners.menu.MenuInputScanner;
+
 public class Room {
+    Prompt prompt = new Prompt(System.in, System.out);
+
+    // options that you want to be presented are supplied in an array of strings
+    String[] options = {"Animals", "Fruits", "mcs"};
+
+
+    public Room() {
+        // create a menu with those options and set the message
+        MenuInputScanner promptMenu = new MenuInputScanner(options);
+        promptMenu.setMessage("choose a category3");
+        // show the menu to the user and get the selected answer
+        int answerIndex = prompt.getUserInput(promptMenu);
+
+
+        System.out.println("User wants to " + options[answerIndex - 1]);
+    }
+
+    public static void main(String[] args) {
+        Room room = new Room();
+
+    }
+
+
 }

@@ -38,10 +38,10 @@ public class Server {
 
                 System.out.println("Waiting for clients connections...");
                 Socket playerSocket = serverSocket.accept();
-
-                System.out.println("Connection established with " + playerSocket);
-
                 Player player = new Player(playerSocket, this);
+                //player.setName();
+                System.out.println("Connection established with " + player.getPlayerName());
+
                 players.add(player);
                 threadPool.submit(player);
 

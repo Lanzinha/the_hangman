@@ -1,5 +1,8 @@
 package org.academiadecodigo.cunnilinux.hangman;
 
+import org.academiadecodigo.bootcamp.Prompt;
+import org.academiadecodigo.bootcamp.scanners.string.StringInputScanner;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.logging.Level;
@@ -10,11 +13,12 @@ public class Player implements Runnable {
 
     private String playerName;
     private Socket playerSocket;
-
+    private Prompt prompt;
     private BufferedWriter out;
     private BufferedReader in;
     private Server server;
     private boolean quit;
+    private PrintStream printStream;
 
 //    private Prompt prompt;
 //
@@ -26,16 +30,18 @@ public class Player implements Runnable {
         this.playerSocket = playerSocket;
         this.server = server;
         try {
-
             out = new BufferedWriter(new OutputStreamWriter(playerSocket.getOutputStream()));
             in = new BufferedReader(new InputStreamReader(playerSocket.getInputStream()));
+            printStream = new PrintStream(playerSocket.getOutputStream());
+            prompt = new Prompt(playerSocket.getInputStream(),printStream);
 
 //            prompt = new Prompt(playerSocket.getInputStream(), playerSocket.getOutputStream());
 //            StringInputScanner inOut = new StringInputScanner();
 //            inOut.setMessage("What is your name?");
-            mainMenu();
             setName();
             server.broadcastMessage(this, "SERVER: " + playerName + " has entered the chat");
+
+            mainMenu();
 
         } catch (IOException e) {
 
@@ -113,11 +119,14 @@ public class Player implements Runnable {
 
     }
 
-    private void setName() throws IOException {
+    // sets player name
+    public void setName() throws IOException {
 
-
-        sendMessage("Please input your username: ");
-        playerName = in.readLine();
+        StringInputScanner nameInput = new StringInputScanner();
+        nameInput.setMessage("What is your name?");
+        //sendMessage("Please input your username: ");
+        playerName = prompt.getUserInput(nameInput);
+        Thread.currentThread().setName(playerName);
 
     }
 
