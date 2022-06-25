@@ -54,8 +54,7 @@ public class Player implements Runnable {
             try {
 
                 server.broadcastMessage(this, readMessage());
-               // server.broadcastMessage(this, drawHangman(0));
-
+                server.broadcastMessage(drawHangman(0));
 
             } catch (IOException e) {
 
