@@ -36,8 +36,6 @@ public class Player implements Runnable {
 //            inOut.setMessage("What is your name?");
 
             mainMenu();
-            setName();
-            server.broadcastMessage(this, "SERVER: " + playerName + " has entered the chat");
 
         } catch (IOException e) {
 
@@ -50,6 +48,9 @@ public class Player implements Runnable {
 
     @Override
     public synchronized void run() {
+
+        setName();
+        server.broadcastMessage(this, "SERVER: " + playerName + " has entered the chat");
 
         while (playerSocket.isConnected()) { //while (!quit) {
 
@@ -88,7 +89,23 @@ public class Player implements Runnable {
 
         try {
 
-            out.write(playerName + ": " + line);
+            out.write(line);
+            out.newLine();
+            out.flush();
+
+        } catch (IOException e) {
+
+            System.err.println(e.getMessage());
+            logger.log(Level.WARNING, "ERROR - Unable to send message " + e.getMessage());
+
+        }
+    }
+
+    public void sendMessage(Player player, String line)   {
+
+        try {
+
+            out.write(player.getPlayerName() + ": " + line);
             out.newLine();
             out.flush();
 
@@ -134,13 +151,21 @@ public class Player implements Runnable {
 
     }
 
-    private void setName() throws IOException {
+    private void setName()   {
 
         sendMessage("Please input your username: ");
-        playerName = in.readLine();
+        try {
+
+            playerName = in.readLine();
+
+        } catch (IOException e) {
+
+            System.err.println("ERROR -  " + e.getMessage());
+            logger.log(Level.WARNING, "ERROR - Unable to close the socket" + e.getMessage());
+
+        }
 
     }
-
 
     public String getPlayerName() {
 
@@ -158,7 +183,6 @@ public class Player implements Runnable {
         return hangman.draw();
 
     }
-
 
     public void mainMenu() throws IOException {
 

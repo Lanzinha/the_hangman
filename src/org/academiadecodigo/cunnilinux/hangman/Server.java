@@ -65,17 +65,8 @@ public class Server {
 
             if (!senderPlayer.getPlayerName().equals(player.getPlayerName())) {
 
-                try {
+                player.sendMessage(message);
 
-                    player.sendMessage(message);
-
-
-                } catch (IOException e) {
-
-                    System.err.println("ERROR -  " + e.getMessage());
-                    logger.log(Level.WARNING, "ERROR - Unable to remove player" + e.getMessage());
-
-                }
             }
         }
     }
@@ -84,17 +75,7 @@ public class Server {
 
         for (Player player : players) {
 
-            try {
-
-                player.sendMessage(message);
-
-
-            } catch (IOException e) {
-
-                System.err.println("ERROR -  " + e.getMessage());
-                logger.log(Level.WARNING, "ERROR - Unable to remove player" + e.getMessage());
-
-            }
+            player.sendMessage(message);
 
         }
     }
