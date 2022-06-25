@@ -95,10 +95,22 @@ public class Player implements Runnable {
 
         try {
 
-            logger.log(Level.INFO, "closing client socket for " + getAddress());
-            in.close();
-            out.close();
-            playerSocket.close();
+            if(in != null) {
+
+                in.close();
+
+            }
+           if(out != null) {
+
+               out.close();
+
+           }
+           if(playerSocket != null) {
+
+               logger.log(Level.INFO, "closing client socket for " + getAddress());
+               playerSocket.close();
+
+           }
 
         } catch (IOException e) {
 
