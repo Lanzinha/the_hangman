@@ -49,12 +49,13 @@ public class Player implements Runnable {
     @Override
     public synchronized void run() {
 
-        while (playerSocket.isConnected()) { //while (!quit) {
+        while (true) {
+            //playerSocket.isConnected()) { //while (!quit) {
 
             try {
 
                 server.broadcastMessage(this, readMessage());
-               // server.broadcastMessage(this, drawHangman(0));
+                server.broadcastMessage(this, drawHangman(0));
 
 
             } catch (IOException e) {
@@ -62,7 +63,7 @@ public class Player implements Runnable {
                 System.err.println(e.getMessage());
                 logger.log(Level.WARNING, e.getMessage());
                 close();
-                break;
+                // break;
 
             }
         }
@@ -131,31 +132,31 @@ public class Player implements Runnable {
     private String drawHangman(int lives) {
         String hangman = "";
         if (lives <= 6) {
-            hangman = ("      _______" +
-                    "      |      |");
+            hangman = ("                  _______ \n" +
+                    "                 |      |\n");
 
-            /*    if (lives <= 5) {
-                    out.write("         O");
+            if (lives <= 5) {
+                hangman += "                     O  \n";
 
-                    if (lives <= 4) {
-                        out.write("         \\ ");
+                if (lives <= 4) {
+                    hangman += "                    /";
 
-                        if (lives <= 3) {
-                            out.write("/");
+                    if (lives <= 3) {
+                        hangman += "  \\\n";
 
-                            if (lives <= 2) {
-                                out.write("             |");
+                        if (lives <= 2) {
+                            hangman += "                     |\n";
 
-                                if (lives <= 1) {
-                                    out.write("              /");
-                                    if (lives == 0) {
-                                        out.write("\\");
-                                    }
+                            if (lives <= 1) {
+                                hangman += "                    /";
+                                if (lives == 0) {
+                                    hangman += "  \\\n";
                                 }
                             }
                         }
                     }
-                }*/
+                }
+            }
 
         }
         return hangman;
