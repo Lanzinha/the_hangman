@@ -8,7 +8,6 @@ public class Main {
             int port = args.length > 0 ? Integer.parseInt(args[0]) : Server.DEFAULT_PORT;
 
             Server server = new Server(port);
-            server.init();
             server.start();
 
         } catch (NumberFormatException e) {

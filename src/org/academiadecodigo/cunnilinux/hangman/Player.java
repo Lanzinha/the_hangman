@@ -12,98 +12,74 @@ public class Player implements Runnable {
     private Socket playerSocket;
 
     private BufferedWriter out;
-    private BufferedReader terminalIn;
     private BufferedReader in;
-    //private final Server server;
+    private Server server;
+    private boolean quit;
 
-    public Player(Socket playerSocket) {
+    public Player(Socket playerSocket, Server server) {
 
         this.playerSocket = playerSocket;
+        this.server = server;
 
         try {
-            terminalIn = new BufferedReader(new InputStreamReader(System.in));
+
             in = new BufferedReader(new InputStreamReader(playerSocket.getInputStream()));
             out = new BufferedWriter(new OutputStreamWriter(playerSocket.getOutputStream()));
 
         } catch (IOException e) {
 
-            throw new RuntimeException(e);
+            System.err.println(e.getMessage());
 
         }
-    }
-
-
-    public String getAddress() {
-        return playerSocket.getInetAddress().getHostAddress() + ":" + playerSocket.getLocalPort();
     }
 
     @Override
     public void run() {
 
-        while (!this.playerSocket.isClosed()) {
-
-            sendMessage();
-
-        }
-
-           /* } catch(SocketException ex){
-
-                logger.log(Level.INFO, "client disconnected " + getAddress());
-
-            } catch(IOException ex){
-
-                logger.log(Level.WARNING, ex.getMessage());
-                close();
-            }*/
-
-
-    }
-        /* private void start() throws IOException {
-        System.out.println(serverReply.readLine());
-        out.println(terminalIn.readLine());
-        System.out.println("Start your chat:  ");
-        while (true) {
-            String message = terminalIn.readLine();
-            if (!message.equalsIgnoreCase("Quit")) {
-
-                out.println(message);
-                System.out.println(serverReply.readLine());
-            } else {
-                break;
-            }
-        }
-        clientSocket.close();
-    }*/
-
-
-    public void receiveMessage(String message) throws IOException {
-
-        out.write(message);
-
-    }
-
-    public synchronized void sendMessage() {
-
-        String userName = null;
-
         try {
-            out.write("Welcome my dear friend. How can i assist u?");
-            out.write("pls write your name");
-            userName = in.readLine();
-            // while (true) {
-            String message = in.readLine();
-            out.write(userName + ": " + message);
-            //System.out.println(message);
 
-            //}
+            setName();
+
+            String line;
+            while (!quit) {
+
+                line = receiveMessage();
+                server.broadcast(line);
+
+            }
+
+            stop();
+
         } catch (IOException e) {
 
-            throw new RuntimeException(e);
+            System.err.println(e.getMessage());
+            logger.log(Level.WARNING, e.getMessage());
 
         }
     }
 
-    private void close() {
+    public String receiveMessage() throws IOException {
+
+        String line = in.readLine();
+
+        if (line.equals("/quit")) {
+
+            quit = true;
+
+        }
+
+        return name + " : " + line;
+    }
+
+    public void sendMessage(String line) throws IOException {
+
+        out.write(line);
+        out.newLine();
+        out.flush();
+
+    }
+
+    private void stop() {
 
         try {
 
@@ -114,6 +90,20 @@ public class Player implements Runnable {
 
             logger.log(Level.INFO, e.getMessage());
         }
+
+    }
+
+    public String getAddress() {
+
+        return playerSocket.getInetAddress().getHostAddress() + ":" + playerSocket.getLocalPort();
+
+    }
+
+    private void setName() throws IOException {
+
+        out.write("Welcome my dear friend. How can I assist you? \n");
+        sendMessage("Please input your username: ");
+        name = in.readLine();
 
     }
 }

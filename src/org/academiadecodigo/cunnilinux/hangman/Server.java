@@ -14,40 +14,40 @@ public class Server {
     private static final Logger logger = Logger.getLogger(Server.class.getName());
     public static final int DEFAULT_PORT = 9000;
     public static final int MAX_PLAYERS = 3;
-    private final ExecutorService fixedPool;
-    private ServerSocket serverSocket = null;
-    private Player player;
-    private CopyOnWriteArrayList<Player> players;
-    private int portNumber;
+    private final ExecutorService threadPool;
+    private ServerSocket serverSocket;
+    private final CopyOnWriteArrayList<Player> players;
+    private final int portNumber;
 
     public Server(int portNumber) {
 
         players = new CopyOnWriteArrayList<>();
-        fixedPool = Executors.newFixedThreadPool(MAX_PLAYERS);
+        threadPool = Executors.newCachedThreadPool();
         this.portNumber = portNumber;
 
     }
 
-    public void init() {
+    public void start() {
 
         try {
 
             serverSocket = new ServerSocket(portNumber);
-            System.out.println("server listening on port " + portNumber);
-            logger.log(Level.INFO, "server bind to " + getAddress());
+            logger.log(Level.INFO, "server bound to " + getAddress());
 
-            while (players.size() < MAX_PLAYERS) {
+            while (true) {
 
+                System.out.println("Waiting for clients connections...");
                 Socket playerSocket = serverSocket.accept();
-                player = new Player(playerSocket);
-                System.out.println("Connection Established");
-                Player player = new Player(playerSocket);
+
+                System.out.println("Connection established with " + playerSocket);
+
+                Player player = new Player(playerSocket, this);
                 players.add(player);
-                fixedPool.submit(player);
+                threadPool.submit(player);
 
             }
 
-            System.out.println("All 3 players in");
+            //System.out.println("All 3 players in");
 
         } catch (IOException e) {
 
@@ -56,35 +56,17 @@ public class Server {
             System.exit(1);
 
         }
-
     }
 
-    public void start() {
 
-        System.out.println("Starting game...");
-
-        //    fixedPool.submit(player);
-
-        while (true) {
-
-            for (Player player : players) {
-
-                player.sendMessage();
-
-                // broadcast("hello");
-            }
-        }
-    }
-
-    private synchronized void broadcast(String message) throws IOException {
+    public void broadcast(String message) throws IOException {
 
         for (Player player : players) {
 
-            player.receiveMessage(message);
+            player.sendMessage(message);
+
         }
-
     }
-
 
     private String getAddress() {
 
