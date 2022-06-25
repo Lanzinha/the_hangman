@@ -59,7 +59,7 @@ public class Server {
     }
 
 
-    public void broadcast(String message) throws IOException {
+    public synchronized void broadcast(String message) throws IOException {
 
         for (Player player : players) {
 
