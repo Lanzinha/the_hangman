@@ -1,8 +1,5 @@
 package org.academiadecodigo.cunnilinux.hangman;
 
-import org.academiadecodigo.bootcamp.Prompt;
-import org.academiadecodigo.bootcamp.scanners.string.StringInputScanner;
-
 import java.io.*;
 import java.net.Socket;
 import java.util.logging.Level;
@@ -32,6 +29,7 @@ public class Player implements Runnable {
 
             out = new BufferedWriter(new OutputStreamWriter(playerSocket.getOutputStream()));
             in = new BufferedReader(new InputStreamReader(playerSocket.getInputStream()));
+
 //            prompt = new Prompt(playerSocket.getInputStream(), playerSocket.getOutputStream());
 //            StringInputScanner inOut = new StringInputScanner();
 //            inOut.setMessage("What is your name?");
@@ -43,6 +41,7 @@ public class Player implements Runnable {
 
             System.err.println(e.getMessage());
             logger.log(Level.WARNING, "ERROR - Unable to initialize I/O streams " + e.getMessage());
+            close();
 
         }
     }
@@ -50,25 +49,27 @@ public class Player implements Runnable {
     @Override
     public void run() {
 
-        try {
+        while(playerSocket.isConnected()) { //while (!quit) {
 
-            while (!quit) {
+            try {
 
-                server.broadcastMessage(receiveMessage());
+                server.broadcastMessage(readMessage());
+
+            } catch (IOException e) {
+
+                System.err.println(e.getMessage());
+                logger.log(Level.WARNING, e.getMessage());
+                close();
+                break;
 
             }
-
-            stop();
-
-        } catch (IOException e) {
-
-            System.err.println(e.getMessage());
-            logger.log(Level.WARNING, e.getMessage());
-
         }
+
+        //close();
+
     }
 
-    public String receiveMessage() throws IOException {
+    public String readMessage() throws IOException {
 
         String line = in.readLine();
 
@@ -89,16 +90,19 @@ public class Player implements Runnable {
 
     }
 
-    private void stop() {
+    private void close() {
 
         try {
 
             logger.log(Level.INFO, "closing client socket for " + getAddress());
+            in.close();
+            out.close();
             playerSocket.close();
 
         } catch (IOException e) {
 
             logger.log(Level.INFO, e.getMessage());
+
         }
     }
 

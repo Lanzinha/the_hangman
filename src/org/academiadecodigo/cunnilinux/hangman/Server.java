@@ -53,6 +53,7 @@ public class Server {
 
             logger.log(Level.SEVERE, "could not bind to port " + portNumber);
             logger.log(Level.SEVERE, e.getMessage());
+            close();
             System.exit(1);
 
         }
