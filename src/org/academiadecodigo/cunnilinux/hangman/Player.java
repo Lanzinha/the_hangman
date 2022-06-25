@@ -1,5 +1,8 @@
 package org.academiadecodigo.cunnilinux.hangman;
 
+import org.academiadecodigo.bootcamp.Prompt;
+import org.academiadecodigo.bootcamp.scanners.string.StringInputScanner;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.logging.Level;
@@ -16,15 +19,22 @@ public class Player implements Runnable {
     private Server server;
     private boolean quit;
 
+//    private Prompt prompt;
+//
+//    private StringInputScanner stringInputScanner;
+
+
     public Player(Socket playerSocket, Server server) {
 
         this.playerSocket = playerSocket;
         this.server = server;
-
         try {
 
-            in = new BufferedReader(new InputStreamReader(playerSocket.getInputStream()));
             out = new BufferedWriter(new OutputStreamWriter(playerSocket.getOutputStream()));
+            in = new BufferedReader(new InputStreamReader(playerSocket.getInputStream()));
+//            prompt = new Prompt(playerSocket.getInputStream(), playerSocket.getOutputStream());
+//            StringInputScanner inOut = new StringInputScanner();
+//            inOut.setMessage("What is your name?");
 
             setName();
             server.broadcastMessage("SERVER: " + playerName + " has entered the chat");
@@ -90,7 +100,6 @@ public class Player implements Runnable {
 
             logger.log(Level.INFO, e.getMessage());
         }
-
     }
 
     public String getAddress() {
