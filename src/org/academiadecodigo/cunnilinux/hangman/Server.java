@@ -34,7 +34,7 @@ public class Server {
             serverSocket = new ServerSocket(portNumber);
             logger.log(Level.INFO, "server bound to " + getAddress());
 
-            while (true) {
+            while (!serverSocket.isClosed()) {
 
                 System.out.println("Waiting for clients connections...");
                 Socket playerSocket = serverSocket.accept();
@@ -58,8 +58,7 @@ public class Server {
         }
     }
 
-
-    public synchronized void broadcast(String message) throws IOException {
+    public synchronized void broadcastMessage(String message) throws IOException {
 
         for (Player player : players) {
 
@@ -75,5 +74,24 @@ public class Server {
         }
 
         return serverSocket.getInetAddress().getHostAddress() + ":" + serverSocket.getLocalPort();
+    }
+
+    private void close() {
+
+        try {
+
+            if (serverSocket != null) {
+
+                serverSocket.close();
+
+            }
+
+        } catch (IOException e) {
+
+            System.err.println("ERROR -  " + e.getMessage());
+            logger.log(Level.WARNING, "ERROR - Unable to close the socket" + e.getMessage());
+
+        }
+
     }
 }

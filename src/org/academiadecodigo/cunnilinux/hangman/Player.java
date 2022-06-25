@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 public class Player implements Runnable {
     private static final Logger logger = Logger.getLogger(Player.class.getName());
 
-    private String name;
+    private String playerName;
     private Socket playerSocket;
 
     private BufferedWriter out;
@@ -26,9 +26,13 @@ public class Player implements Runnable {
             in = new BufferedReader(new InputStreamReader(playerSocket.getInputStream()));
             out = new BufferedWriter(new OutputStreamWriter(playerSocket.getOutputStream()));
 
+            setName();
+            server.broadcastMessage("SERVER: " + playerName + " has entered the chat");
+
         } catch (IOException e) {
 
             System.err.println(e.getMessage());
+            logger.log(Level.WARNING, "ERROR - Unable to initialize I/O streams " + e.getMessage());
 
         }
     }
@@ -38,11 +42,9 @@ public class Player implements Runnable {
 
         try {
 
-            setName();
-
             while (!quit) {
 
-                server.broadcast(receiveMessage());
+                server.broadcastMessage(receiveMessage());
 
             }
 
@@ -66,7 +68,7 @@ public class Player implements Runnable {
 
         }
 
-        return name + " : " + line;
+        return playerName + ": " + line;
     }
 
     public void sendMessage(String line) throws IOException {
@@ -99,9 +101,9 @@ public class Player implements Runnable {
 
     private void setName() throws IOException {
 
-        out.write("Welcome my dear friend. How can I assist you? \n");
+        out.write("Welcome to The Hangman my dear friend. How can I assist you? \n");
         sendMessage("Please input your username: ");
-        name = in.readLine();
+        playerName = in.readLine();
 
     }
 }
