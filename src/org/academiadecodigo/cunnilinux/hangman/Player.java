@@ -1,5 +1,9 @@
 package org.academiadecodigo.cunnilinux.hangman;
 
+import main.java.org.academiadecodigo.bootcamp.scanners.string.HangmanStringInputScanner;
+import org.academiadecodigo.bootcamp.Prompt;
+import org.academiadecodigo.bootcamp.scanners.string.StringInputScanner;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.logging.Level;
@@ -20,12 +24,8 @@ public class Player implements Runnable {
     public static final String ANSI_GREEN = "\u001B[32m";
     public static final String ANSI_YELLOW = "\u001B[33m";
     public static final String ANSI_CYAN = "\u001B[36m";
-
-
-//    private Prompt prompt;
-//
-//    private StringInputScanner stringInputScanner;
-
+    private Prompt prompt;
+    private PrintStream printStream;
 
     public Player(Socket playerSocket, Server server) {
 
@@ -37,9 +37,8 @@ public class Player implements Runnable {
             out = new BufferedWriter(new OutputStreamWriter(playerSocket.getOutputStream()));
             in = new BufferedReader(new InputStreamReader(playerSocket.getInputStream()));
 
-//            prompt = new Prompt(playerSocket.getInputStream(), playerSocket.getOutputStream());
-//            StringInputScanner inOut = new StringInputScanner();
-//            inOut.setMessage("What is your name?");
+            printStream = new PrintStream(playerSocket.getOutputStream());
+            prompt = new Prompt(playerSocket.getInputStream(), printStream);
 
             mainMenu();
 
@@ -63,6 +62,19 @@ public class Player implements Runnable {
             try {
 
                 server.broadcastMessage(this, readMessage());
+
+                //play
+                // escolhe palavra e desenha o nro de ltras com __
+                // desenha hangman
+                // loop players
+                    // input Letra player guess
+                    // verify letra certa
+                    // chama hangman
+                    // break se ganhador ou se forcado total
+                //gameover
+
+
+
                 server.broadcastMessage(drawHangman());
 
             } catch (IOException e) {
@@ -159,7 +171,12 @@ public class Player implements Runnable {
 
     private void setName() {
 
-        sendMessage("Please input your username: ");
+        StringInputScanner nameInput = new StringInputScanner();
+        nameInput.setMessage("Please input your username: ");
+        playerName = prompt.getUserInput(nameInput);
+        Thread.currentThread().setName(playerName);
+
+        //sendMessage("Please input your username: ");
         try {
 
             playerName = in.readLine();
@@ -180,11 +197,6 @@ public class Player implements Runnable {
 
     private String drawHangman() {
 
-        hangman.next();
-        hangman.next();
-        hangman.next();
-        hangman.next();
-        hangman.next();
         hangman.next();
         return hangman.draw();
 

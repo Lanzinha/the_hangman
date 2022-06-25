@@ -1,6 +1,5 @@
 package org.academiadecodigo.cunnilinux.hangman;
 
-
 public class Hangman {
     private int lives = 6;
     private String image = " _____\n" +
@@ -89,10 +88,11 @@ public class Hangman {
         return image;
     }
 
-   /* public void gameOverCheck()
+   public void gameOverCheck()
     {
         if (lives == 0)
-            Game.gameOver();
-    }*/
+            //Game.gameOver();
+            System.out.println("GAME OVER");
+    }
 
 }
