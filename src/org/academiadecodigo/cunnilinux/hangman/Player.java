@@ -15,6 +15,12 @@ public class Player implements Runnable {
     private BufferedReader in;
     private Server server;
     private boolean quit;
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_CYAN = "\u001B[36m";
+
 
 //    private Prompt prompt;
 //
@@ -85,7 +91,7 @@ public class Player implements Runnable {
         return playerName + ": " + line;
     }
 
-    public void sendMessage(String line)   {
+    public void sendMessage(String line) {
 
         try {
 
@@ -101,7 +107,7 @@ public class Player implements Runnable {
         }
     }
 
-    public void sendMessage(Player player, String line)   {
+    public void sendMessage(Player player, String line) {
 
         try {
 
@@ -151,7 +157,7 @@ public class Player implements Runnable {
 
     }
 
-    private void setName()   {
+    private void setName() {
 
         sendMessage("Please input your username: ");
         try {
@@ -186,7 +192,7 @@ public class Player implements Runnable {
 
     public void mainMenu() throws IOException {
 
-        out.write("\n" +
+        out.write(ANSI_CYAN + "\n" +
                 " .----------------.  .----------------.  .-----------------. .----------------.  .----------------.  .----------------.  .-----------------.\n" +
                 "| .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |\n" +
                 "| |  ____  ____  | || |      __      | || | ____  _____  | || |    ______    | || | ____    ____ | || |      __      | || | ____  _____  | |\n" +
@@ -202,11 +208,11 @@ public class Player implements Runnable {
         try {
             Thread.sleep(1500);
 
-            out.write("                     The legend game which you play on papers, now u can play it with your friends on our server, for free!\n\n");
+            out.write(ANSI_RESET + ANSI_CYAN + "                     The legend game which you play on papers, now u can play it with your friends on our server, for free!\n\n");
             Thread.sleep(100);
             out.write("                     To play, the Rules are:\n\n");
             Thread.sleep(100);
-            out.write("                     1: If you know a letter or the word, go ahead and try to guess.\n\n");
+            out.write(ANSI_RESET + ANSI_GREEN + "                     1: If you know a letter or the word, go ahead and try to guess.\n\n");
             Thread.sleep(100);
             out.write("                     2: Each player will have 5 seconds to guess per round.\n\n");
             Thread.sleep(100);
@@ -216,9 +222,9 @@ public class Player implements Runnable {
             Thread.sleep(100);
             out.write("                     5: The player with more words completed, wins the game.\n\n");
             Thread.sleep(100);
-            out.write("                     To quit the game, write /quit\n\n");
+            out.write(ANSI_RESET + ANSI_RED + "                     To quit the game, write /quit\n\n");
             Thread.sleep(100);
-            out.write("                     GO AHEAD & HAVE SOME FUN WITH THIS AMAZING GAME!!!\n\n");
+            out.write(ANSI_RESET + ANSI_YELLOW + "                     GO AHEAD & HAVE SOME FUN WITH THIS AMAZING GAME!!!\n\n");
             Thread.sleep(100);
 
 
