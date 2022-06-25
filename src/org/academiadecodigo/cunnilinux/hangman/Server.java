@@ -95,6 +95,7 @@ public class Server {
                 logger.log(Level.WARNING, "ERROR - Unable to remove player" + e.getMessage());
 
             }
+
         }
     }
 

@@ -10,7 +10,7 @@ public class Player implements Runnable {
 
     private String playerName;
     private Socket playerSocket;
-
+    private Hangman hangman;
     private BufferedWriter out;
     private BufferedReader in;
     private Server server;
@@ -23,6 +23,7 @@ public class Player implements Runnable {
 
     public Player(Socket playerSocket, Server server) {
 
+        this.hangman = new Hangman();
         this.playerSocket = playerSocket;
         this.server = server;
         try {
@@ -49,19 +50,20 @@ public class Player implements Runnable {
     @Override
     public synchronized void run() {
 
-        while (playerSocket.isConnected()) { //while (!quit) {
+        while (true) {
+            //playerSocket.isConnected()) { //while (!quit) {
 
             try {
 
                 server.broadcastMessage(this, readMessage());
-                server.broadcastMessage(drawHangman(0));
+                server.broadcastMessage(drawHangman());
 
             } catch (IOException e) {
 
                 System.err.println(e.getMessage());
                 logger.log(Level.WARNING, e.getMessage());
                 close();
-                break;
+                // break;
 
             }
         }
@@ -139,37 +141,15 @@ public class Player implements Runnable {
         return playerName;
     }
 
-    private String drawHangman(int lives) {
-        String hangman = "";
-        if (lives <= 6) {
-            hangman = ("      _______" +
-                    "      |      |");
+    private String drawHangman() {
+        hangman.next();
+        hangman.next();
+        hangman.next();
+        hangman.next();
+        hangman.next();
+        hangman.next();
+        return hangman.draw();
 
-            /*    if (lives <= 5) {
-                    out.write("         O");
-
-                    if (lives <= 4) {
-                        out.write("         \\ ");
-
-                        if (lives <= 3) {
-                            out.write("/");
-
-                            if (lives <= 2) {
-                                out.write("             |");
-
-                                if (lives <= 1) {
-                                    out.write("              /");
-                                    if (lives == 0) {
-                                        out.write("\\");
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }*/
-
-        }
-        return hangman;
     }
 
 
@@ -199,7 +179,7 @@ public class Player implements Runnable {
             Thread.sleep(100);
             out.write("                     2: Each player will have 5 seconds to guess per round.\n\n");
             Thread.sleep(100);
-            out.write("                     3:When u fail to guess the letter or word, the hangman starts to take form. \n\n");
+            out.write("                     3: When u fail to guess the letter or word, the hangman starts to take form. \n\n");
             Thread.sleep(100);
             out.write("                     4: When the hangman is fully formed, it´s a tie and a new game is started..\n\n");
             Thread.sleep(100);
