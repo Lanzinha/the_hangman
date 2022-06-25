@@ -80,7 +80,7 @@ public class Server {
         }
     }
 
-    public synchronized void broadcastMessageAll(String message) {
+    public synchronized void broadcastMessage(String message) {
 
         for (Player player : players) {
 
@@ -102,17 +102,7 @@ public class Server {
     private void removePlayer(Player player) {
 
         players.remove(player);
-
-        try {
-
-            broadcastMessage(player, "SERVER: " + player.getPlayerName() + " has left the game!");
-
-        } catch (IOException e) {
-
-            System.err.println("ERROR -  " + e.getMessage());
-            logger.log(Level.WARNING, "ERROR - Unable to remove player" + e.getMessage());
-
-        }
+        broadcastMessage(player, "SERVER: " + player.getPlayerName() + " has left the game!");
 
     }
 
