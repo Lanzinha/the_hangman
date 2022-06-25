@@ -63,9 +63,11 @@ public class Server {
 
         for (Player player : players) {
 
-            if(!senderPlayer.getPlayerName().equals())
-            player.sendMessage(message);
+            if(!senderPlayer.getPlayerName().equals(player.getPlayerName())) {
 
+                player.sendMessage(message);
+
+            }
         }
     }
 
