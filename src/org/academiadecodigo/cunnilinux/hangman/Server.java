@@ -98,6 +98,10 @@ public class Server {
         return serverSocket.getInetAddress().getHostAddress() + ":" + serverSocket.getLocalPort();
     }
 
+    public CopyOnWriteArrayList<Player> getPlayers() {
+        return players;
+    }
+
     private void close() {
 
         try {

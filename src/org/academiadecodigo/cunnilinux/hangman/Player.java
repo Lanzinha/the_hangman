@@ -6,6 +6,7 @@ import org.academiadecodigo.bootcamp.scanners.string.StringInputScanner;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,16 +15,12 @@ public class Player implements Runnable {
 
     private String playerName;
     private Socket playerSocket;
-
     private Prompt prompt;
-
     private Hangman hangman;
-
     private BufferedWriter out;
     private BufferedReader in;
     private Server server;
     private boolean quit;
-
     private PrintStream printStream;
     private String word = "Palavra";
 
@@ -48,7 +45,7 @@ public class Player implements Runnable {
             out = new BufferedWriter(new OutputStreamWriter(playerSocket.getOutputStream()));
             in = new BufferedReader(new InputStreamReader(playerSocket.getInputStream()));
             printStream = new PrintStream(playerSocket.getOutputStream());
-            prompt = new Prompt(playerSocket.getInputStream(),printStream);
+            prompt = new Prompt(playerSocket.getInputStream(), printStream);
 
             printStream = new PrintStream(playerSocket.getOutputStream());
             prompt = new Prompt(playerSocket.getInputStream(), printStream);
@@ -81,12 +78,33 @@ public class Player implements Runnable {
                 // escolhe palavra e desenha o nro de ltras com __
                 // desenha hangman
                 // loop players
+                for (Player player : server.getPlayers()) {
                     // input Letra player guess
-                    // verify letra certa
-                    // chama hangman
-                    // break se ganhador ou se forcado total
-                //gameover
 
+                }
+
+
+                // input Letra player guess
+                StringInputScanner inGuess = new StringInputScanner();
+                inGuess.setMessage("Please input your guess: ");
+                String playerGuess = prompt.getUserInput(inGuess);
+                if (!word.contains(playerGuess)) {
+                    System.out.println("guess again");
+                } else {
+
+                    for (int i = 0; i < word.length(); i++) {
+                        boolean[] verify = new boolean[word.length()];
+                        if (playerGuess.equals(word.charAt(i))) {
+                            verify[i] = true;
+                        }
+                    }
+
+                }
+
+                // verify letra certa
+                // chama hangman
+                // break se ganhador ou se forcado total
+                //gameover
 
 
                 server.broadcastMessage(drawHangman());
@@ -103,6 +121,16 @@ public class Player implements Runnable {
         //close();
 
     }
+
+    // checks if word contains player guess
+    public void verify(String str) {
+
+    }
+
+    public void setTrue() {
+
+    }
+
 
     public String readMessage() throws IOException {
 
