@@ -34,6 +34,7 @@ public class Player implements Runnable {
 //            prompt = new Prompt(playerSocket.getInputStream(), playerSocket.getOutputStream());
 //            StringInputScanner inOut = new StringInputScanner();
 //            inOut.setMessage("What is your name?");
+
             mainMenu();
             setName();
             server.broadcastMessage(this, "SERVER: " + playerName + " has entered the chat");
@@ -50,8 +51,7 @@ public class Player implements Runnable {
     @Override
     public synchronized void run() {
 
-        while (true) {
-            //playerSocket.isConnected()) { //while (!quit) {
+        while (playerSocket.isConnected()) { //while (!quit) {
 
             try {
 
@@ -63,8 +63,7 @@ public class Player implements Runnable {
                 System.err.println(e.getMessage());
                 logger.log(Level.WARNING, e.getMessage());
                 close();
-                // break;
-
+                break;
             }
         }
 
@@ -85,34 +84,42 @@ public class Player implements Runnable {
         return playerName + ": " + line;
     }
 
-    public void sendMessage(String line) throws IOException {
+    public void sendMessage(String line)   {
 
-        out.write(line);
-        out.newLine();
-        out.flush();
+        try {
 
+            out.write(playerName + ": " + line);
+            out.newLine();
+            out.flush();
+
+        } catch (IOException e) {
+
+            System.err.println(e.getMessage());
+            logger.log(Level.WARNING, "ERROR - Unable to send message " + e.getMessage());
+
+        }
     }
 
     private void close() {
 
         try {
 
-            if(in != null) {
+            if (in != null) {
 
                 in.close();
 
             }
-           if(out != null) {
+            if (out != null) {
 
-               out.close();
+                out.close();
 
-           }
-           if(playerSocket != null) {
+            }
+            if (playerSocket != null) {
 
-               logger.log(Level.INFO, "closing client socket for " + getAddress());
-               playerSocket.close();
+                logger.log(Level.INFO, "closing client socket for " + getAddress());
+                playerSocket.close();
 
-           }
+            }
 
         } catch (IOException e) {
 
@@ -129,7 +136,6 @@ public class Player implements Runnable {
 
     private void setName() throws IOException {
 
-
         sendMessage("Please input your username: ");
         playerName = in.readLine();
 
@@ -142,6 +148,7 @@ public class Player implements Runnable {
     }
 
     private String drawHangman() {
+
         hangman.next();
         hangman.next();
         hangman.next();
@@ -154,6 +161,7 @@ public class Player implements Runnable {
 
 
     public void mainMenu() throws IOException {
+
         out.write("\n" +
                 " .----------------.  .----------------.  .-----------------. .----------------.  .----------------.  .----------------.  .-----------------.\n" +
                 "| .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |\n" +
@@ -169,7 +177,6 @@ public class Player implements Runnable {
 
         try {
             Thread.sleep(1500);
-
 
             out.write("                     The legend game which you play on papers, now u can play it with your friends on our server, for free!\n\n");
             Thread.sleep(100);
@@ -192,8 +199,9 @@ public class Player implements Runnable {
 
 
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
 
+            logger.log(Level.WARNING, e.getMessage());
+
+        }
     }
 }
