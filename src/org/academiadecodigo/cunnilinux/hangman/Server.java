@@ -59,13 +59,40 @@ public class Server {
         }
     }
 
-    public synchronized void broadcastMessage(Player senderPlayer, String message) throws IOException {
+    public synchronized void broadcastMessage(Player senderPlayer, String message) {
 
         for (Player player : players) {
 
-            if(!senderPlayer.getPlayerName().equals(player.getPlayerName())) {
+            if (!senderPlayer.getPlayerName().equals(player.getPlayerName())) {
+
+                try {
+
+                    player.sendMessage(message);
+
+
+                } catch (IOException e) {
+
+                    System.err.println("ERROR -  " + e.getMessage());
+                    logger.log(Level.WARNING, "ERROR - Unable to remove player" + e.getMessage());
+
+                }
+            }
+        }
+    }
+
+    public synchronized void broadcastMessageAll(String message) {
+
+        for (Player player : players) {
+
+            try {
 
                 player.sendMessage(message);
+
+
+            } catch (IOException e) {
+
+                System.err.println("ERROR -  " + e.getMessage());
+                logger.log(Level.WARNING, "ERROR - Unable to remove player" + e.getMessage());
 
             }
         }
@@ -77,7 +104,7 @@ public class Server {
 
         try {
 
-            broadcastMessage(player ,"SERVER: " + player.getPlayerName() + " has left the game!");
+            broadcastMessage(player, "SERVER: " + player.getPlayerName() + " has left the game!");
 
         } catch (IOException e) {
 
