@@ -19,6 +19,7 @@ public class Player implements Runnable {
     private Server server;
     private boolean quit;
     private PrintStream printStream;
+    private String word = "Palavra";
 
 //    private Prompt prompt;
 //
@@ -38,10 +39,10 @@ public class Player implements Runnable {
 //            prompt = new Prompt(playerSocket.getInputStream(), playerSocket.getOutputStream());
 //            StringInputScanner inOut = new StringInputScanner();
 //            inOut.setMessage("What is your name?");
+            mainMenu();
             setName();
             server.broadcastMessage(this, "SERVER: " + playerName + " has entered the chat");
 
-            mainMenu();
 
         } catch (IOException e) {
 
@@ -123,10 +124,12 @@ public class Player implements Runnable {
     public void setName() throws IOException {
 
         StringInputScanner nameInput = new StringInputScanner();
-        nameInput.setMessage("What is your name?");
+        nameInput.setMessage("What is your username?");
+
         //sendMessage("Please input your username: ");
         playerName = prompt.getUserInput(nameInput);
         Thread.currentThread().setName(playerName);
+
 
     }
 
