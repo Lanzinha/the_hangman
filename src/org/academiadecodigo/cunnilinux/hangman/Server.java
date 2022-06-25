@@ -71,10 +71,29 @@ public class Server {
         }
     }
 
+    private void removePlayer(Player player) {
+
+        players.remove(player);
+
+        try {
+
+            broadcastMessage(player ,"SERVER: " + player.getPlayerName() + " has left the game!");
+
+        } catch (IOException e) {
+
+            System.err.println("ERROR -  " + e.getMessage());
+            logger.log(Level.WARNING, "ERROR - Unable to remove player" + e.getMessage());
+
+        }
+
+    }
+
     private String getAddress() {
 
         if (serverSocket == null) {
+
             return null;
+
         }
 
         return serverSocket.getInetAddress().getHostAddress() + ":" + serverSocket.getLocalPort();
