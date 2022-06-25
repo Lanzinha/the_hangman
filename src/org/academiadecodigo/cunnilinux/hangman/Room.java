@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Room {
+
     Prompt prompt = new Prompt(System.in, System.out);
 
     // options that you want to be presented are supplied in an array of strings

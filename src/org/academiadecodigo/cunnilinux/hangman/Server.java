@@ -59,11 +59,11 @@ public class Server {
         }
     }
 
-    public synchronized void broadcastMessage(Player senderPlayer, String message) throws IOException {
+    public synchronized void broadcastMessage(Player senderPlayer, String message) {
 
         for (Player player : players) {
 
-            if(!senderPlayer.getPlayerName().equals(player.getPlayerName())) {
+            if (!senderPlayer.getPlayerName().equals(player.getPlayerName())) {
 
                 player.sendMessage(message);
 
@@ -71,10 +71,28 @@ public class Server {
         }
     }
 
+    public synchronized void broadcastMessage(String message) {
+
+        for (Player player : players) {
+
+            player.sendMessage(message);
+
+        }
+    }
+
+    private void removePlayer(Player player) {
+
+        players.remove(player);
+        broadcastMessage(player, "SERVER: " + player.getPlayerName() + " has left the game!");
+
+    }
+
     private String getAddress() {
 
         if (serverSocket == null) {
+
             return null;
+
         }
 
         return serverSocket.getInetAddress().getHostAddress() + ":" + serverSocket.getLocalPort();
