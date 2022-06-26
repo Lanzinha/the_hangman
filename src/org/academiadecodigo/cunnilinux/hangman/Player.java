@@ -73,29 +73,49 @@ public class Player implements Runnable {
         // break se ganhador ou se forcado total
         //gameover
 
-        chooseWords = new ChooseWords();
-        randomWord = chooseWords.words[(int) (Math.random() * chooseWords.words.length)];
-        //String hint = getHint();
-
         setName();
         server.broadcastMessage(this, "SERVER: " + playerName + " has entered the chat");
 
-        boolean[] verifyCorrectLetters = new boolean[randomWord.length()];
+        chooseWords = new ChooseWords();
+        randomWord = chooseWords.words[(int) (Math.random() * chooseWords.words.length)].toUpperCase();
+        System.err.println(randomWord);
+        //String hint = getHint();
 
-        char[] letters = new char[randomWord.length() * 2];
+        //boolean[] verifyCorrectLetters = new boolean[randomWord.length()];
+
+        char[] charArrWord = randomWord.toCharArray();
+        char[] hiddenWord = randomWord.toCharArray();
+        Arrays.fill(hiddenWord, '*');
+
+        System.out.print(hiddenWord);
+
+        /*char[] letters = new char[randomWord.length() * 2];
         for (int letter = 0; letter < letters.length; letter++) {
             // gerar string com espaço entre as letras para melhor visualização
         }
+*/
 
+        char charPlayerGuess;
         while (playerSocket.isConnected()) { //while (!quit) {
 
-            server.broadcastMessage(String.valueOf(letters));
+            server.broadcastMessage(String.valueOf(hiddenWord));
 
-            CompWordChar(randomWord);
+            charPlayerGuess = getPlayerGuess();
+            if(checkAlreadyGuessed(hiddenWord, charPlayerGuess)) {
+                continue;
+            }
+
+            checkGuess();
+
+            // Atualizar palavra escondida na tela com a letra certa
+            //charArrWordcheck
+            compareWordChar(charArrWord, hiddenWord);
+
+            // checkGameOver
+            // break se ganhador ou se forcado total
+            //gameover
 
             server.broadcastMessage(hangman.draw());
-
-            // Atualizar palavra na tela com a letra certa
 
            /* try {
 
@@ -110,68 +130,85 @@ public class Player implements Runnable {
         }
     }
 
-    public synchronized void CompWordChar(String secretWord) {
+    private boolean checkGuess(char[] charArrHiddenWord, char charPlayerGuess) {
+
+        for (int j = 0; j < charArrHiddenWord.length; j++) {
+
+            if (charPlayerGuess == charArrHiddenWord[j]) {
+
+                return true;
+
+            }
+        }
+
+        return false;
+    }
+
+    private boolean checkAlreadyGuessed(char[] charArrHiddenWord, char charPlayerGuess) {
+
+        for (int j = 0; j < charArrHiddenWord.length; j++) {
+
+            if (charPlayerGuess == charArrHiddenWord[j]) {
+
+                return true;
+
+            }
+        }
+
+        return false;
+    }
+
+    public char getPlayerGuess() {
 
         // input Letra player guess
         StringInputScanner inGuess = new StringInputScanner();
         inGuess.setMessage("Please input your guess: ");
         String playerGuess = prompt.getUserInput(inGuess);
 
-        char[] CharArr=secretWord.toCharArray();
-        char[] star = secretWord.toCharArray();
-        for(int i=0;i<star.length;i++)
-        {
-            star[i] = '*';
-            System.out.print(star[i]);
+        // logica para aceitar apenas um caracter e somente [A-Z]
+        // HangmanInput
+        return playerGuess.toUpperCase().charAt(0);
+
+    }
+
+    public synchronized void compareWordChar(char[] charArrWord, char[] charArrHiddenWord) {
+
+      else {
+                if (guessLetter == charArrHiddenWord[j]) {
+                    charArrHiddenWord[j] = guessLetter;
+
+                    System.out.printf("CORRECT GUESS!\n");
+                }
+            }
         }
 
-        for (int i=1; i<=3; i++)
-        {
-            sendMessage ("Guess a Letter:");
-            char letter= playerGuess.charAt(0);
-
-            for (int j=0;j<CharArr.length; j++)
-            {
-                if(letter == star[j])
-                {
-                    System.out.println("this word already exist");
-                }
-                else
-                {
-                    if(letter==CharArr[j])
-                    {
-                        star[j]=letter;
-                        i--;
-                        System.out.printf("CORRECT GUESS!\n");
-                    }
-                }
-            }
-            System.out.print(star);
-            switch(i+0)
-            {
-                case 1: System.err.printf("Strike 1\n");
-                    break;
-                case 2: System.err.printf("Strike 2\n");
-                    break;
-                case 3: System.err.printf("Strike 3\n");
-                    System.err.printf("You're out!!! The word is Not_Matched\n");
-                    break;
-            }
-
-            System.out.printf("\n");
-            if((new String(secretWord)).equals(new String(star)))
-            {
-                System.err.printf("Winner Winner, Chicken Dinner!\n");
+        System.out.print(star);
+        switch (i + 0) {
+            case 1:
+                System.err.printf("Strike 1\n");
                 break;
-            }
+            case 2:
+                System.err.printf("Strike 2\n");
+                break;
+            case 3:
+                System.err.printf("Strike 3\n");
+                System.err.printf("You're out!!! The word is Not_Matched\n");
+                break;
         }
+
+        System.out.printf("\n");
+        if ((new String(secretWord)).equals(new String(star))) {
+            System.err.printf("Winner Winner, Chicken Dinner!\n");
+            break;
+        }
+
 
     }
 
     //public void gameOver(boolean[] array) {
     //    for (int i = 0; i < array.length; i++) {
 
-     //   }
+    //   }
     //}
 
     public String getHint() {
@@ -229,9 +266,6 @@ public class Player implements Runnable {
         }
         return hint = chooseWords.hints[38];
     }
-
-
-
 
 
     public String readMessage() throws IOException {
