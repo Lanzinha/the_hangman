@@ -47,8 +47,8 @@ public class Player implements Runnable {
             printStream = new PrintStream(playerSocket.getOutputStream());
             prompt = new Prompt(playerSocket.getInputStream(), printStream);
 
-            printStream = new PrintStream(playerSocket.getOutputStream());
-            prompt = new Prompt(playerSocket.getInputStream(), printStream);
+
+
 
             mainMenu();
 
@@ -67,6 +67,7 @@ public class Player implements Runnable {
 
         setName();
         server.broadcastMessage(this, "SERVER: " + playerName + " has entered the chat");
+        boolean[] verify = new boolean[word.length()];;
 
         while (playerSocket.isConnected()) { //while (!quit) {
 
@@ -82,27 +83,13 @@ public class Player implements Runnable {
                     // input Letra player guess
 
                 }
+                CompWordChar(verify);
 
 
-                // input Letra player guess
-                StringInputScanner inGuess = new StringInputScanner();
-                inGuess.setMessage("Please input your guess: ");
-                String playerGuess = prompt.getUserInput(inGuess);
-                if (!word.contains(playerGuess)) {
-                    System.out.println("guess again");
-                } else {
 
-                    for (int i = 0; i < word.length(); i++) {
-                        boolean[] verify = new boolean[word.length()];
-                        if (playerGuess.equals(word.charAt(i))) {
-                            verify[i] = true;
-                        }
-                    }
 
-                }
 
-                // verify letra certa
-                // chama hangman
+
                 // break se ganhador ou se forcado total
                 //gameover
 
@@ -123,7 +110,34 @@ public class Player implements Runnable {
     }
 
     // checks if word contains player guess
-    public void verify(String str) {
+    // builds boolean array
+    public boolean[] CompWordChar(boolean[] verify) {
+
+        // input Letra player guess
+        StringInputScanner inGuess = new StringInputScanner();
+        inGuess.setMessage("Please input your guess: ");
+        String playerGuess = prompt.getUserInput(inGuess);
+
+
+        if (!word.contains(playerGuess)) {
+
+            System.out.println("guess again");
+
+            // chama hangman
+            drawHangman();
+
+        } else {
+
+
+            for (int i = 0; i < word.length(); i++) {
+
+                if (playerGuess.equals(word.charAt(i))) {
+                    verify[i] = true;
+                }
+            }
+
+        }
+        return verify;
 
     }
 
