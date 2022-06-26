@@ -84,57 +84,115 @@ public class Player implements Runnable {
         //boolean[] verifyCorrectLetters = new boolean[randomWord.length()];
 
         char[] charArrWord = randomWord.toCharArray();
-        char[] hiddenWord = randomWord.toCharArray();
-        Arrays.fill(hiddenWord, '*');
+        char[] charArrHiddenWord = randomWord.toCharArray();
+        Arrays.fill(charArrHiddenWord, '*');
 
-        System.out.print(hiddenWord);
+        System.out.print(charArrHiddenWord);
 
         /*char[] letters = new char[randomWord.length() * 2];
         for (int letter = 0; letter < letters.length; letter++) {
             // gerar string com espaço entre as letras para melhor visualização
         }
 */
+        server.broadcastMessage(hangman.draw());
 
         char charPlayerGuess;
         while (playerSocket.isConnected()) { //while (!quit) {
 
-            server.broadcastMessage(String.valueOf(hiddenWord));
+            server.broadcastMessage("\n" + String.valueOf(charArrHiddenWord) + "\n");
 
             charPlayerGuess = getPlayerGuess();
-            if(checkAlreadyGuessed(hiddenWord, charPlayerGuess)) {
+            if (checkAlreadyGuessed(charArrHiddenWord, charPlayerGuess)) {
+
                 continue;
+
             }
 
-            checkGuess();
+            if (checkGuess(charArrWord, charPlayerGuess)) {
+                Boolean foundFlag = false;
+                // atualiza HW
+                for (int i = 0; i < charArrWord.length; i++) {
 
-            // Atualizar palavra escondida na tela com a letra certa
-            //charArrWordcheck
-            compareWordChar(charArrWord, hiddenWord);
+                    if (charPlayerGuess == charArrWord[i]) {
 
-            // checkGameOver
-            // break se ganhador ou se forcado total
-            //gameover
+                        charArrHiddenWord[i] = charPlayerGuess;
+                        foundFlag = true;
+
+                    }
+                }
+
+                if(foundFlag) {
+
+                    sendMessage("Correct guess: " + charPlayerGuess);
+
+                }
+
+            } else {
+
+                sendMessage("Wrong guess: " + charPlayerGuess);
+                hangman.next();
+
+            }
 
             server.broadcastMessage(hangman.draw());
 
-           /* try {
+            if (checkGameOver(charArrHiddenWord)) {
 
-            } catch (
-                    IOException e) {
-
-                System.err.println(e.getMessage());
-                logger.log(Level.WARNING, e.getMessage());
-                close();
                 break;
-            }*/
+
+            }
         }
     }
 
+    private boolean checkGameOver(char[] charArrHiddenWord) {
+
+        // checkGameOver
+        // break se ganhador ou se forcado total
+        //gameover
+        if (hangman.checkGameOver()) {
+
+            sendMessage("You lose");
+            return true;
+
+        }
+
+        if (checkAllWordsGuess(charArrHiddenWord)){
+
+            sendMessage("You win");
+            return true;
+
+        }
+
+        return false;
+
+    }
+
+    private boolean checkAllWordsGuess(char[] charArrHiddenWord) {
+
+        for (int i = 0; i < charArrHiddenWord.length; i++) {
+
+            if(charArrHiddenWord[i] == '*') {
+
+                return false;
+
+            }
+
+        }
+        return true;
+    }
+
+
     private boolean checkGuess(char[] charArrHiddenWord, char charPlayerGuess) {
 
-        for (int j = 0; j < charArrHiddenWord.length; j++) {
+        return checkArrayGuess(charArrHiddenWord, charPlayerGuess);
 
-            if (charPlayerGuess == charArrHiddenWord[j]) {
+    }
+
+    private boolean checkArrayGuess(char[] charArr, char charPlayerGuess) {
+
+        for (int j = 0; j < charArr.length; j++) {
+
+            if (charPlayerGuess == charArr[j]) {
 
                 return true;
 
@@ -146,16 +204,8 @@ public class Player implements Runnable {
 
     private boolean checkAlreadyGuessed(char[] charArrHiddenWord, char charPlayerGuess) {
 
-        for (int j = 0; j < charArrHiddenWord.length; j++) {
+        return checkArrayGuess(charArrHiddenWord, charPlayerGuess);
 
-            if (charPlayerGuess == charArrHiddenWord[j]) {
-
-                return true;
-
-            }
-        }
-
-        return false;
     }
 
     public char getPlayerGuess() {
@@ -169,102 +219,6 @@ public class Player implements Runnable {
         // HangmanInput
         return playerGuess.toUpperCase().charAt(0);
 
-    }
-
-    public synchronized void compareWordChar(char[] charArrWord, char[] charArrHiddenWord) {
-
-      else {
-                if (guessLetter == charArrHiddenWord[j]) {
-                    charArrHiddenWord[j] = guessLetter;
-
-                    System.out.printf("CORRECT GUESS!\n");
-                }
-            }
-        }
-
-        System.out.print(star);
-        switch (i + 0) {
-            case 1:
-                System.err.printf("Strike 1\n");
-                break;
-            case 2:
-                System.err.printf("Strike 2\n");
-                break;
-            case 3:
-                System.err.printf("Strike 3\n");
-                System.err.printf("You're out!!! The word is Not_Matched\n");
-                break;
-        }
-
-        System.out.println("\n");
-        if ((new String(secretWord)).equals(new String(star))) {
-            System.err.printf("Winner Winner, Chicken Dinner!\n");
-            break;
-        }
-
-
-    }
-
-    //public void gameOver(boolean[] array) {
-    //    for (int i = 0; i < array.length; i++) {
-
-    //   }
-    //}
-
-    public String getHint() {
-
-        String hint;
-
-        if (randomWord.equals(chooseWords.words[0])) {
-            return hint = chooseWords.hints[0];
-        }
-        if (randomWord.equals(chooseWords.words[1])) {
-            return hint = chooseWords.hints[1];
-
-        }
-        if (randomWord.equals(chooseWords.words[2])) {
-            return hint = chooseWords.hints[2];
-
-        }
-        if (randomWord.equals(chooseWords.words[3])) {
-            return hint = chooseWords.hints[1];
-
-        }
-        if (randomWord.equals(chooseWords.words[4])) {
-            return hint = chooseWords.hints[3];
-
-        }
-        if (randomWord.equals(chooseWords.words[5])) {
-            return hint = chooseWords.hints[3];
-
-        }
-        if (randomWord.equals(chooseWords.words[6])) {
-            return hint = chooseWords.hints[1];
-
-        }
-        if (randomWord.equals(chooseWords.words[7])) {
-            return hint = chooseWords.hints[5];
-
-        }
-        if (randomWord.equals(chooseWords.words[8])) {
-            return hint = chooseWords.hints[5];
-
-        }
-        if (randomWord.equals(chooseWords.words[9])) {
-            return hint = chooseWords.hints[37];
-
-        }
-        if (randomWord.equals(chooseWords.words[10])) {
-            return hint = chooseWords.hints[10];
-
-        }
-        if (randomWord.equals(chooseWords.words[11])) {
-            return hint = chooseWords.hints[6];
-        }
-        if (randomWord.equals(chooseWords.words[12])) {
-            return hint = chooseWords.hints[38];
-        }
-        return hint = chooseWords.hints[38];
     }
 
 

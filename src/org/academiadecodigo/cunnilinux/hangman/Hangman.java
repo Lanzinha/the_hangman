@@ -88,11 +88,9 @@ public class Hangman {
         return image;
     }
 
-    public void checkGameOver()
-    {
-        if (lives == 0)
-            //Game.gameOver();
-            System.out.println("GAME OVER");
-    }
+    public synchronized boolean checkGameOver() {
 
+        return lives == 0;
+
+    }
 }
