@@ -6,6 +6,7 @@ import org.academiadecodigo.bootcamp.scanners.string.StringInputScanner;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,6 +27,9 @@ public class Player implements Runnable {
     public static final String ANSI_CYAN = "\u001B[36m";
     private Prompt prompt;
     private PrintStream printStream;
+    private String randomWord;
+    ChooseWords chooseWords = new ChooseWords();
+
 
     public Player(Socket playerSocket, Server server) {
 
@@ -59,36 +63,87 @@ public class Player implements Runnable {
 
         while (playerSocket.isConnected()) { //while (!quit) {
 
-            try {
 
-                server.broadcastMessage(this, readMessage());
+            //play
+            // escolhe palavra e desenha o nro de ltras com __
+            // desenha hangman
+            // loop players
+            // input Letra player guess
+            // verify letra certa
+            // chama hangman
+            // break se ganhador ou se forcado total
+            //gameover
+            randomWord = chooseWords.words[(int) (Math.random() * chooseWords.words.length)];
+            String hint = Hint();
+            char[] letters = new char[randomWord.length() * 2];
+            for (int letter = 0; letter < letters.length; letter++) {
 
-                //play
-                // escolhe palavra e desenha o nro de ltras com __
-                // desenha hangman
-                // loop players
-                    // input Letra player guess
-                    // verify letra certa
-                    // chama hangman
-                    // break se ganhador ou se forcado total
-                //gameover
-
-
-
-                server.broadcastMessage(drawHangman());
-
-            } catch (IOException e) {
-
-                System.err.println(e.getMessage());
-                logger.log(Level.WARNING, e.getMessage());
-                close();
-                break;
             }
+            server.broadcastMessage(String.valueOf(letters));
+
+            //server.broadcastMessage(drawHangman());
+
         }
 
         //close();
 
     }
+
+    public String Hint() {
+        String hint;
+        if (randomWord.equals(chooseWords.words[0])) {
+            return hint = chooseWords.hints[0];
+
+        }
+        if (randomWord.equals(chooseWords.words[1])) {
+            return hint = chooseWords.hints[1];
+
+        }
+        if (randomWord.equals(chooseWords.words[2])) {
+            return hint = chooseWords.hints[2];
+
+        }
+        if (randomWord.equals(chooseWords.words[3])) {
+            return hint = chooseWords.hints[1];
+
+        }
+        if (randomWord.equals(chooseWords.words[4])) {
+            return hint = chooseWords.hints[3];
+
+        }
+        if (randomWord.equals(chooseWords.words[5])) {
+            return hint = chooseWords.hints[3];
+
+        }
+        if (randomWord.equals(chooseWords.words[6])) {
+            return hint = chooseWords.hints[1];
+
+        }
+        if (randomWord.equals(chooseWords.words[7])) {
+            return hint = chooseWords.hints[5];
+
+        }
+        if (randomWord.equals(chooseWords.words[8])) {
+            return hint = chooseWords.hints[5];
+
+        }
+        if (randomWord.equals(chooseWords.words[9])) {
+            return hint = chooseWords.hints[37];
+
+        }
+        if (randomWord.equals(chooseWords.words[10])) {
+            return hint = chooseWords.hints[10];
+
+        }
+        if (randomWord.equals(chooseWords.words[11])) {
+            return hint = chooseWords.hints[6];
+        }
+        if (randomWord.equals(chooseWords.words[12])) {
+            return hint = chooseWords.hints[38];
+        }
+        return hint = chooseWords.hints[38];
+    }
+
 
     public String readMessage() throws IOException {
 
@@ -171,21 +226,26 @@ public class Player implements Runnable {
 
     private void setName() {
 
-        StringInputScanner nameInput = new StringInputScanner();
-        nameInput.setMessage("Please input your username: ");
-        playerName = prompt.getUserInput(nameInput);
-        Thread.currentThread().setName(playerName);
+        //StringInputScanner nameInput = new StringInputScanner();
+        //nameInput.setMessage("Please input your username: ");
+        //playerName = prompt.getUserInput(nameInput);
+        //Thread.currentThread().setName(playerName);
 
-        //sendMessage("Please input your username: ");
+        sendMessage("Please input your username: ");
         try {
 
             playerName = in.readLine();
-
+            if (!(playerName == null)) {
+                Thread.sleep(200);
+                out.write("      Type 'play' to start the game");
+            }
         } catch (IOException e) {
 
             System.err.println("ERROR -  " + e.getMessage());
             logger.log(Level.WARNING, "ERROR - Unable to close the socket" + e.getMessage());
 
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
 
     }
