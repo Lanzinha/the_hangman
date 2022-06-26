@@ -155,6 +155,7 @@ public class Player implements Runnable {
         if (checkAllWordsGuess(charArrHiddenWord)) {
 
             sendMessage("You win");
+            sendMessage(ASCII.WINNER);
             return true;
 
         }
@@ -378,6 +379,7 @@ public class Player implements Runnable {
             sendMessage(ANSI_RESET + ANSI_RED + "                     To quit the game, write /quit\n\n");
             Thread.sleep(sleepTime);
             sendMessage(ANSI_RESET + ANSI_CYAN + "                     GO AHEAD & HAVE SOME FUN WITH THIS AMAZING GAME!!!\n\n");
+            sendMessage("");
             Thread.sleep(sleepTime);
 
         } catch (InterruptedException e) {
