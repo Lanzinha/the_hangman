@@ -12,7 +12,6 @@ import java.util.logging.Logger;
 
 public class Player implements Runnable {
 
-    public static final String CLEAR_SCREEN = new String(new char[100]).replace("\0", "\n");
     private static final Logger logger = Logger.getLogger(Player.class.getName());
 
     private String playerName;
@@ -24,6 +23,8 @@ public class Player implements Runnable {
     private BufferedReader in;
     private Server server;
     private boolean quit;
+    public static final String CLEAR_SCREEN = new String(new char[100]).replace("\0", "\n");
+    public static final String ANSI_CLEAR_SCREEN = "\033[H\033[2J";
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_RED = "\u001B[31m";
     public static final String ANSI_GREEN = "\u001B[32m";
@@ -66,7 +67,6 @@ public class Player implements Runnable {
 
         setName();
 
-
         chooseWords = new ChooseWords();
         randomWord = chooseWords.getRandomWord();
         String hint = chooseWords.getHint(randomWord);
@@ -84,8 +84,10 @@ public class Player implements Runnable {
         server.broadcastMessage(hangman.draw());
 
         char charPlayerGuess;
-        while (playerSocket.isConnected()) { //while (!quit) {
+        while (playerSocket.isConnected()) {
 
+            server.broadcastMessage(CLEAR_SCREEN);
+            server.broadcastMessage(hangman.draw());
             server.broadcastMessage("\n" + String.valueOf(charArrHiddenWord) + "\n");
 
             charPlayerGuess = getPlayerGuess();
@@ -100,6 +102,7 @@ public class Player implements Runnable {
                 Boolean foundFlag = false;
                 for (int i = 0; i < charArrWord.length; i++) {
 
+                    server.broadcastMessage(hangman.draw());
                     if (charPlayerGuess == charArrWord[i]) {
 
                         charArrHiddenWord[i] = charPlayerGuess;
@@ -121,10 +124,9 @@ public class Player implements Runnable {
 
             }
 
-            server.broadcastMessage(hangman.draw());
-
             if (checkGameOver(charArrHiddenWord)) {
 
+                server.broadcastMessage(hangman.draw());
                 break;
 
             }
@@ -337,6 +339,7 @@ public class Player implements Runnable {
 
         int sleepTime = 500;
 
+        sendMessage(ANSI_CLEAR_SCREEN);
         sendMessage(ANSI_CYAN + "\n" +
                 " .----------------.  .----------------.  .-----------------. .----------------.  .----------------.  .----------------.  .-----------------.\n" +
                 "| .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |\n" +
