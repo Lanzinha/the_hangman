@@ -73,8 +73,9 @@ public class Player implements Runnable {
         //gameover
 
         chooseWords = new ChooseWords();
-        randomWord = chooseWords.words[(int) (Math.random() * chooseWords.words.length)];
-        //String hint = getHint();
+        randomWord = chooseWords.getRandomWord();
+        String hint = chooseWords.getHint(randomWord);
+
 
         setName();
         server.broadcastMessage(this, "SERVER: " + playerName + " has entered the chat");
@@ -148,62 +149,6 @@ public class Player implements Runnable {
         for (int i = 0; i < array.length; i++) {
 
         }
-    }
-
-    public String getHint() {
-
-        String hint;
-
-        if (randomWord.equals(chooseWords.words[0])) {
-            return hint = chooseWords.hints[0];
-        }
-        if (randomWord.equals(chooseWords.words[1])) {
-            return hint = chooseWords.hints[1];
-
-        }
-        if (randomWord.equals(chooseWords.words[2])) {
-            return hint = chooseWords.hints[2];
-
-        }
-        if (randomWord.equals(chooseWords.words[3])) {
-            return hint = chooseWords.hints[1];
-
-        }
-        if (randomWord.equals(chooseWords.words[4])) {
-            return hint = chooseWords.hints[3];
-
-        }
-        if (randomWord.equals(chooseWords.words[5])) {
-            return hint = chooseWords.hints[3];
-
-        }
-        if (randomWord.equals(chooseWords.words[6])) {
-            return hint = chooseWords.hints[1];
-
-        }
-        if (randomWord.equals(chooseWords.words[7])) {
-            return hint = chooseWords.hints[5];
-
-        }
-        if (randomWord.equals(chooseWords.words[8])) {
-            return hint = chooseWords.hints[5];
-
-        }
-        if (randomWord.equals(chooseWords.words[9])) {
-            return hint = chooseWords.hints[37];
-
-        }
-        if (randomWord.equals(chooseWords.words[10])) {
-            return hint = chooseWords.hints[10];
-
-        }
-        if (randomWord.equals(chooseWords.words[11])) {
-            return hint = chooseWords.hints[6];
-        }
-        if (randomWord.equals(chooseWords.words[12])) {
-            return hint = chooseWords.hints[38];
-        }
-        return hint = chooseWords.hints[38];
     }
 
 

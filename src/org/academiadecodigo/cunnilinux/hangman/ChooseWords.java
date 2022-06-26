@@ -1,40 +1,39 @@
 package org.academiadecodigo.cunnilinux.hangman;
 
+import java.util.*;
+
 public class ChooseWords {
 
 
-    public String[] getWords() {
+    HashMap<String, String> words = new HashMap<String, String>();
 
-        return words;
+
+    public ChooseWords() {
+        words.put("programming", "HINT: Your word is related with programming.");
+        words.put("abstraction", "HINT: Your word is related with programming.");
+        words.put("polymorphism", "HINT: Your word is related with programming.");
 
     }
 
-    public String[] getHints() {
-        return hints;
+    public String getRandomWord() {
+
+        Set<String> keySet = words.keySet();
+        List<String> keyList = new ArrayList<>(keySet);
+
+        int size = keyList.size();
+        int randIdx = new Random().nextInt(size);
+
+        String randomKey = keyList.get(randIdx);
+        String randomValue = words.get(randomKey);
+        return randomKey;
     }
 
-    String[] words = new String[]{
+    public int getSize() {
+        return words.size();
+    }
 
-            "programming",
-            "abstraction",
-            "polymorphism",
-            "encapsulation",
-            "streams",
-            "threads",
-            "functional",
-            "networking",
-            "web",
-            "concurrency",
-            "linux",
-            "function",
+    public String getHint(String word) {
+        return words.get(word);
+    }
 
-    };
-
-    String[] hints = new String[]{
-
-            "HINT: Your word is related with programming.",
-            "HINT: Your word is related with computer hardware.",
-            "HINT: You use to work, and have fun.",
-
-    };
 }
