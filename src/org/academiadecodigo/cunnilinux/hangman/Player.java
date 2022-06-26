@@ -26,6 +26,7 @@ public class Player implements Runnable {
     public static final String ANSI_CYAN = "\u001B[36m";
     private Prompt prompt;
     private PrintStream printStream;
+    private String word = "Palavra";
 
     public Player(Socket playerSocket, Server server) {
 
@@ -36,9 +37,9 @@ public class Player implements Runnable {
 
             out = new BufferedWriter(new OutputStreamWriter(playerSocket.getOutputStream()));
             in = new BufferedReader(new InputStreamReader(playerSocket.getInputStream()));
-
             printStream = new PrintStream(playerSocket.getOutputStream());
             prompt = new Prompt(playerSocket.getInputStream(), printStream);
+
 
             mainMenu();
 
@@ -56,6 +57,7 @@ public class Player implements Runnable {
 
         setName();
         server.broadcastMessage(this, "SERVER: " + playerName + " has entered the chat");
+        boolean[] verify = new boolean[word.length()];
 
         while (playerSocket.isConnected()) { //while (!quit) {
 
@@ -66,24 +68,23 @@ public class Player implements Runnable {
                 //play
                 // escolhe palavra e desenha o nro de ltras com __
                 // desenha hangman
-                // loop players
-                    // input Letra player guess
-                    // verify letra certa
-                    // chama hangman
-                    // break se ganhador ou se forcado total
-                //gameover
 
 
 
-                server.broadcastMessage(drawHangman());
 
-            } catch (IOException e) {
+                    CompWordChar(verify);
 
-                System.err.println(e.getMessage());
-                logger.log(Level.WARNING, e.getMessage());
-                close();
-                break;
-            }
+
+                    server.broadcastMessage(drawHangman());
+
+                } catch(IOException e){
+
+                    System.err.println(e.getMessage());
+                    logger.log(Level.WARNING, e.getMessage());
+                    close();
+                    break;
+                }
+
         }
 
         //close();
@@ -101,6 +102,42 @@ public class Player implements Runnable {
         }
 
         return playerName + ": " + line;
+    }
+
+
+    public synchronized boolean[] CompWordChar(boolean[] verify) {
+
+        // input Letra player guess
+        StringInputScanner inGuess = new StringInputScanner();
+        inGuess.setMessage("Please input your guess: ");
+        String playerGuess = prompt.getUserInput(inGuess);
+
+
+        if (!word.contains(playerGuess)) {
+
+            sendMessage("guess again");
+
+            // chama hangman
+            drawHangman();
+
+        } else {
+
+
+            for (int i = 0; i < word.length(); i++) {
+
+                if (playerGuess.equals(word.charAt(i))) {
+                    verify[i] = true;
+                }
+            }
+
+        }
+        return verify;
+    }
+
+    public void gameOver(boolean[] array) {
+        for (int i = 0; i < array.length; i++) {
+
+        }
     }
 
     public void sendMessage(String line) {
