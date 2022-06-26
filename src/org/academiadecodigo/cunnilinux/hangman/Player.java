@@ -196,7 +196,7 @@ public class Player implements Runnable {
                 break;
         }
 
-        System.out.printf("\n");
+        System.out.println("\n");
         if ((new String(secretWord)).equals(new String(star))) {
             System.err.printf("Winner Winner, Chicken Dinner!\n");
             break;
