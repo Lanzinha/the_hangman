@@ -72,9 +72,9 @@ public class Player implements Runnable {
         // break se ganhador ou se forcado total
         //gameover
 
-        ChooseWords chooseWords = new ChooseWords();
-        String randomWord = chooseWords.words[(int) (Math.random() * chooseWords.words.length)];
-        String hint = Hint();
+        chooseWords = new ChooseWords();
+        randomWord = chooseWords.words[(int) (Math.random() * chooseWords.words.length)];
+        //String hint = getHint();
 
         setName();
         server.broadcastMessage(this, "SERVER: " + playerName + " has entered the chat");
@@ -144,8 +144,10 @@ public class Player implements Runnable {
         }
     }
 
-    public String Hint() {
+    public String getHint() {
+
         String hint;
+
         if (randomWord.equals(chooseWords.words[0])) {
             return hint = chooseWords.hints[0];
         }
