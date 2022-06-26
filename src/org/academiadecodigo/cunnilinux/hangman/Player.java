@@ -16,6 +16,8 @@ public class Player implements Runnable {
     private String playerName;
     private Socket playerSocket;
     private Hangman hangman;
+    private String randomWord;
+    private ChooseWords chooseWords;
     private BufferedWriter out;
     private BufferedReader in;
     private Server server;
@@ -27,14 +29,14 @@ public class Player implements Runnable {
     public static final String ANSI_CYAN = "\u001B[36m";
     private Prompt prompt;
     private PrintStream printStream;
-    private String randomWord;
-    ChooseWords chooseWords = new ChooseWords();
+
 
     public Player(Socket playerSocket, Server server) {
 
-        this.hangman = new Hangman();
         this.playerSocket = playerSocket;
         this.server = server;
+        this.hangman = new Hangman();
+
         try {
 
             out = new BufferedWriter(new OutputStreamWriter(playerSocket.getOutputStream()));
@@ -51,6 +53,7 @@ public class Player implements Runnable {
             close();
 
         }
+
     }
 
     @Override
@@ -66,24 +69,29 @@ public class Player implements Runnable {
         // break se ganhador ou se forcado total
         //gameover
 
+        ChooseWords chooseWords = new ChooseWords();
+        String randomWord = chooseWords.words[(int) (Math.random() * chooseWords.words.length)];
+        String hint = Hint();
+
         setName();
         server.broadcastMessage(this, "SERVER: " + playerName + " has entered the chat");
 
-        randomWord = chooseWords.words[(int) (Math.random() * chooseWords.words.length)];
-        String hint = Hint();
-        boolean[] verify = new boolean[randomWord.length()];
+        boolean[] verifyCorrectLetters = new boolean[randomWord.length()];
+
+        char[] letters = new char[randomWord.length() * 2];
+        for (int letter = 0; letter < letters.length; letter++) {
+            // gerar string com espaço entre as letras para melhor visualização
+        }
 
         while (playerSocket.isConnected()) { //while (!quit) {
 
-            char[] letters = new char[randomWord.length() * 2];
-            for (int letter = 0; letter < letters.length; letter++) {
-
-            }
-
             server.broadcastMessage(String.valueOf(letters));
-            //server.broadcastMessage(drawHangman());
 
-            CompWordChar(verify);
+            verifyCorrectLetters = CompWordChar(verifyCorrectLetters);
+
+            server.broadcastMessage(hangman.draw());
+
+            // Atualizar palavra na tela com a letra certa
 
            /* try {
 
@@ -95,6 +103,41 @@ public class Player implements Runnable {
                 close();
                 break;
             }*/
+        }
+    }
+
+    public synchronized boolean[] CompWordChar(boolean[] verifyCorrectLetters) {
+
+        // input Letra player guess
+        StringInputScanner inGuess = new StringInputScanner();
+        inGuess.setMessage("Please input your guess: ");
+        String playerGuess = prompt.getUserInput(inGuess);
+
+        if (!randomWord.contains(playerGuess)) {
+
+            sendMessage("guess again");
+
+            // chama hangman
+            hangman.next();
+
+        } else {
+
+            for (int i = 0; i < randomWord.length(); i++) {
+
+                if (playerGuess.equals(String.valueOf(randomWord.charAt(i)))) {
+
+                    verifyCorrectLetters[i] = true;
+
+                }
+            }
+
+        }
+        return verifyCorrectLetters;
+    }
+
+    public void gameOver(boolean[] array) {
+        for (int i = 0; i < array.length; i++) {
+
         }
     }
 
@@ -166,43 +209,6 @@ public class Player implements Runnable {
         return playerName + ": " + line;
     }
 
-
-    public synchronized boolean[] CompWordChar(boolean[] verify) {
-
-        // input Letra player guess
-        StringInputScanner inGuess = new StringInputScanner();
-        inGuess.setMessage("Please input your guess: ");
-        String playerGuess = prompt.getUserInput(inGuess);
-
-
-        if (!randomWord.contains(playerGuess)) {
-
-            sendMessage("guess again");
-
-            // chama hangman
-            drawHangman();
-
-        } else {
-
-
-            for (int i = 0; i < randomWord.length(); i++) {
-
-                if (playerGuess.equals(String.valueOf(randomWord.charAt(i)))) {
-
-                    verify[i] = true;
-
-                }
-            }
-
-        }
-        return verify;
-    }
-
-    public void gameOver(boolean[] array) {
-        for (int i = 0; i < array.length; i++) {
-
-        }
-    }
 
     public void sendMessage(String line) {
 
@@ -299,13 +305,6 @@ public class Player implements Runnable {
     public String getPlayerName() {
 
         return playerName;
-    }
-
-    private String drawHangman() {
-
-        hangman.next();
-        return hangman.draw();
-
     }
 
     public void mainMenu() throws IOException {
