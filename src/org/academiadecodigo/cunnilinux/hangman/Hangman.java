@@ -93,4 +93,8 @@ public class Hangman {
         return lives == 0;
 
     }
+
+    public static int getLives() {
+        return lives;
+    }
 }

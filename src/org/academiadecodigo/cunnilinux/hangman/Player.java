@@ -3,6 +3,7 @@ package org.academiadecodigo.cunnilinux.hangman;
 import main.java.org.academiadecodigo.bootcamp.scanners.string.HangmanStringInputScanner;
 import org.academiadecodigo.bootcamp.Prompt;
 import org.academiadecodigo.bootcamp.scanners.string.StringInputScanner;
+import org.academiadecodigo.cunnilinux.hangman.utils.Chronometer;
 
 import java.io.*;
 import java.net.Socket;
@@ -71,7 +72,7 @@ public class Player implements Runnable {
         randomWord = chooseWords.getRandomWord();
         String hint = chooseWords.getHint(randomWord);
         randomWord = randomWord.toUpperCase();
-
+        Chronometer chronometer = new Chronometer();
         char[] charArrWord = randomWord.toCharArray();
         char[] charArrHiddenWord = randomWord.toCharArray();
         Arrays.fill(charArrHiddenWord, '*');
@@ -88,7 +89,15 @@ public class Player implements Runnable {
 
             server.broadcastMessage("\n" + String.valueOf(charArrHiddenWord) + "\n");
 
+            chronometer.start();
             charPlayerGuess = getPlayerGuess();
+            chronometer.stop();
+            if (chronometer.getSeconds() > 5) {
+                sendMessage("Your time is up dummy");
+                hangman.next();
+                hangman.draw();
+                continue;
+            }
             if (checkAlreadyGuessed(charArrHiddenWord, charPlayerGuess)) {
 
                 continue;
@@ -204,8 +213,9 @@ public class Player implements Runnable {
         HangmanStringInputScanner inputGuess = new HangmanStringInputScanner();
         inputGuess.setMessage("Please input your guess: ");
         inputGuess.setError("\nOnly a single letter is allowed!\n");
+        String guessInput = prompt.getUserInput(inputGuess);
+        return guessInput.charAt(0);
 
-        return prompt.getUserInput(inputGuess).charAt(0);
 
     }
 
