@@ -76,9 +76,9 @@ public class Player implements Runnable {
         server.broadcastMessage(this, "SERVER: " + playerName + " has entered the chat");
 
         chooseWords = new ChooseWords();
-        randomWord = chooseWords.words[(int) (Math.random() * chooseWords.words.length)].toUpperCase();
-        System.err.println(randomWord);
-        //String hint = getHint();
+        randomWord = chooseWords.getRandomWord();
+        String hint = chooseWords.getHint(randomWord);
+
 
         //boolean[] verifyCorrectLetters = new boolean[randomWord.length()];
 
@@ -88,12 +88,9 @@ public class Player implements Runnable {
 
         System.out.print(charArrHiddenWord);
 
-        /*char[] letters = new char[randomWord.length() * 2];
-        for (int letter = 0; letter < letters.length; letter++) {
-            // gerar string com espaço entre as letras para melhor visualização
-        }
-*/
+
         server.broadcastMessage(hangman.draw());
+
 
         char charPlayerGuess;
         while (playerSocket.isConnected()) { //while (!quit) {
@@ -120,7 +117,8 @@ public class Player implements Runnable {
                     }
                 }
 
-                if(foundFlag) {
+                if (foundFlag) {
+
 
                     sendMessage("Correct guess: " + charPlayerGuess);
 
@@ -155,7 +153,7 @@ public class Player implements Runnable {
 
         }
 
-        if (checkAllWordsGuess(charArrHiddenWord)){
+        if (checkAllWordsGuess(charArrHiddenWord)) {
 
             sendMessage("You win");
             return true;
@@ -170,7 +168,7 @@ public class Player implements Runnable {
 
         for (int i = 0; i < charArrHiddenWord.length; i++) {
 
-            if(charArrHiddenWord[i] == '*') {
+            if (charArrHiddenWord[i] == '*') {
 
                 return false;
 
@@ -186,6 +184,7 @@ public class Player implements Runnable {
         return checkArrayGuess(charArrHiddenWord, charPlayerGuess);
 
     }
+
 
     private boolean checkArrayGuess(char[] charArr, char charPlayerGuess) {
 
@@ -315,8 +314,22 @@ public class Player implements Runnable {
             playerName = in.readLine();
             if (!(playerName == null)) {
                 Thread.sleep(200);
-                sendMessage("      Type 'play' to start the game");
+                StringInputScanner inGuess = new StringInputScanner();
+                inGuess.setMessage("\n                                      Type 'play' to start your sentence: ");
+                String playerInput = prompt.getUserInput(inGuess);
+                while ((!playerInput.equals("play"))) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    sendMessage(ANSI_RED + "\n                                                CAN´T U READ??" + ANSI_RESET);
+                    playerInput = prompt.getUserInput(inGuess);
+
+                }
+
             }
+            server.broadcastMessage(ANSI_YELLOW + "LET THE WAR START!");
         } catch (IOException e) {
 
             System.err.println("ERROR -  " + e.getMessage());
@@ -349,26 +362,26 @@ public class Player implements Runnable {
                 " '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------' \n\n\n");
 
         try {
-            Thread.sleep(1500);
+            Thread.sleep(1800);
 
             sendMessage(ANSI_RESET + ANSI_CYAN + "                     The legend game which you play on papers, now u can play it with your friends on our server, for free!\n\n");
-            Thread.sleep(100);
+            Thread.sleep(1000);
             sendMessage("                     To play, the Rules are:\n\n");
-            Thread.sleep(100);
+            Thread.sleep(1000);
             sendMessage(ANSI_RESET + ANSI_GREEN + "                     1: If you know a letter or the word, go ahead and try to guess.\n\n");
-            Thread.sleep(100);
+            Thread.sleep(1000);
             sendMessage("                     2: Each player will have 5 seconds to guess per round.\n\n");
-            Thread.sleep(100);
+            Thread.sleep(1000);
             sendMessage("                     3: When u fail to guess the letter or word, the hangman starts to take form. \n\n");
-            Thread.sleep(100);
+            Thread.sleep(1000);
             sendMessage("                     4: When the hangman is fully formed, it´s a tie and a new game is started..\n\n");
-            Thread.sleep(100);
+            Thread.sleep(1000);
             sendMessage("                     5: The player with more words completed, wins the game.\n\n");
-            Thread.sleep(100);
+            Thread.sleep(1000);
             sendMessage(ANSI_RESET + ANSI_RED + "                     To quit the game, write /quit\n\n");
-            Thread.sleep(100);
-            sendMessage(ANSI_RESET + ANSI_YELLOW + "                     GO AHEAD & HAVE SOME FUN WITH THIS AMAZING GAME!!!\n\n");
-            Thread.sleep(100);
+            Thread.sleep(1000);
+            sendMessage(ANSI_RESET + ANSI_CYAN + "                     GO AHEAD & HAVE SOME FUN WITH THIS AMAZING GAME!!!\n\n");
+            Thread.sleep(1000);
 
         } catch (InterruptedException e) {
 
