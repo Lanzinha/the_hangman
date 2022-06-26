@@ -136,8 +136,11 @@ public class Player implements Runnable {
         return verify;
     }
 
-    public void gameOver(boolean[] array) {
-        for (int i = 0; i < array.length; i++) {
+    public void checkArrayValues(boolean[] array) {
+        for (array:
+             ) {
+            
+        }
 
         }
     }
