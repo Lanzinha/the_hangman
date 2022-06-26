@@ -143,7 +143,8 @@ public class Player implements Runnable {
         // gameover
         if (hangman.checkGameOver()) {
 
-            sendMessage("You lose");
+            sendMessage("Your now have a 6k debt, hang in there boy (x");
+            sendMessage(ASCII.LOOSER);
             return true;
 
         }
@@ -151,6 +152,7 @@ public class Player implements Runnable {
         if (checkAllWordsGuess(charArrHiddenWord)) {
 
             sendMessage("You win");
+            sendMessage(ASCII.WINNER);
             return true;
 
         }
@@ -313,13 +315,13 @@ public class Player implements Runnable {
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
-                    sendMessage(ANSI_RED + "\n                                                CAN´T U READ??" + ANSI_RESET);
+                    sendMessage(ANSI_RED + "\n                                                CAN´T U READ??" + ANSI_RESET + ANSI_CYAN);
                     playerInput = prompt.getUserInput(inGuess);
 
                 }
 
             }
-            server.broadcastMessage(ANSI_YELLOW + "LET THE WAR START!");
+            server.broadcastMessage(ANSI_YELLOW + "                                              LET THE WAR START!" + ANSI_RESET + ANSI_CYAN);
 
         } catch (InterruptedException e) {
 
@@ -373,6 +375,7 @@ public class Player implements Runnable {
             sendMessage(ANSI_RESET + ANSI_RED + "                     To quit the game, write /quit\n\n");
             Thread.sleep(sleepTime);
             sendMessage(ANSI_RESET + ANSI_CYAN + "                     GO AHEAD & HAVE SOME FUN WITH THIS AMAZING GAME!!!\n\n");
+            sendMessage("");
             Thread.sleep(sleepTime);
 
         } catch (InterruptedException e) {
