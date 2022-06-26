@@ -78,19 +78,18 @@ public class Player implements Runnable {
         chooseWords = new ChooseWords();
         randomWord = chooseWords.getRandomWord();
         String hint = chooseWords.getHint(randomWord);
-
-
-        //boolean[] verifyCorrectLetters = new boolean[randomWord.length()];
+        randomWord = randomWord.toUpperCase();
 
         char[] charArrWord = randomWord.toCharArray();
         char[] charArrHiddenWord = randomWord.toCharArray();
         Arrays.fill(charArrHiddenWord, '*');
 
+        System.out.print(randomWord + "\n");
         System.out.print(charArrHiddenWord);
 
-
+        server.broadcastMessage("\n" + String.valueOf(charArrHiddenWord) + "\n");
+        server.broadcastMessage(hint + "\n");
         server.broadcastMessage(hangman.draw());
-
 
         char charPlayerGuess;
         while (playerSocket.isConnected()) { //while (!quit) {
@@ -208,17 +207,13 @@ public class Player implements Runnable {
 
     public char getPlayerGuess() {
 
-        // input Letra player guess
-        StringInputScanner inGuess = new StringInputScanner();
-        inGuess.setMessage("Please input your guess: ");
-        String playerGuess = prompt.getUserInput(inGuess);
+        HangmanStringInputScanner inputGuess = new HangmanStringInputScanner();
+        inputGuess.setMessage("Please input your guess: ");
+        inputGuess.setError("\nOnly a single letter is allowed!\n");
 
-        // logica para aceitar apenas um caracter e somente [A-Z]
-        // HangmanInput
-        return playerGuess.toUpperCase().charAt(0);
+        return prompt.getUserInput(inputGuess).charAt(0);
 
     }
-
 
     public String readMessage() throws IOException {
 
@@ -348,6 +343,8 @@ public class Player implements Runnable {
 
     public void mainMenu() throws IOException {
 
+        int sleepTime = 500;
+
         sendMessage(ANSI_CYAN + "\n" +
                 " .----------------.  .----------------.  .-----------------. .----------------.  .----------------.  .----------------.  .-----------------.\n" +
                 "| .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |\n" +
@@ -365,23 +362,23 @@ public class Player implements Runnable {
             Thread.sleep(1800);
 
             sendMessage(ANSI_RESET + ANSI_CYAN + "                     The legend game which you play on papers, now u can play it with your friends on our server, for free!\n\n");
-            Thread.sleep(1000);
+            Thread.sleep(sleepTime);
             sendMessage("                     To play, the Rules are:\n\n");
-            Thread.sleep(1000);
+            Thread.sleep(sleepTime);
             sendMessage(ANSI_RESET + ANSI_GREEN + "                     1: If you know a letter or the word, go ahead and try to guess.\n\n");
-            Thread.sleep(1000);
+            Thread.sleep(sleepTime);
             sendMessage("                     2: Each player will have 5 seconds to guess per round.\n\n");
-            Thread.sleep(1000);
+            Thread.sleep(sleepTime);
             sendMessage("                     3: When u fail to guess the letter or word, the hangman starts to take form. \n\n");
-            Thread.sleep(1000);
+            Thread.sleep(sleepTime);
             sendMessage("                     4: When the hangman is fully formed, it´s a tie and a new game is started..\n\n");
-            Thread.sleep(1000);
+            Thread.sleep(sleepTime);
             sendMessage("                     5: The player with more words completed, wins the game.\n\n");
-            Thread.sleep(1000);
+            Thread.sleep(sleepTime);
             sendMessage(ANSI_RESET + ANSI_RED + "                     To quit the game, write /quit\n\n");
-            Thread.sleep(1000);
+            Thread.sleep(sleepTime);
             sendMessage(ANSI_RESET + ANSI_CYAN + "                     GO AHEAD & HAVE SOME FUN WITH THIS AMAZING GAME!!!\n\n");
-            Thread.sleep(1000);
+            Thread.sleep(sleepTime);
 
         } catch (InterruptedException e) {
 
