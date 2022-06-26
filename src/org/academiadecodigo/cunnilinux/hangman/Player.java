@@ -29,7 +29,6 @@ public class Player implements Runnable {
     public static final String ANSI_CYAN = "\u001B[36m";
     private Prompt prompt;
     private PrintStream printStream;
-    private String teste = "PalavraSecreta";
 
 
     public Player(Socket playerSocket, Server server) {
