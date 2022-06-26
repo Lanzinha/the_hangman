@@ -67,6 +67,7 @@ public class Server {
 
                 player.sendMessage(message);
 
+
             }
         }
     }

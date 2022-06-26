@@ -1,7 +1,7 @@
 package org.academiadecodigo.cunnilinux.hangman;
 
 public class Hangman {
-    private int lives = 6;
+    private static int lives = 6;
     private String image = " _____\n" +
             " |/\n" +
             " |\n" +
@@ -12,7 +12,7 @@ public class Hangman {
             "========\n";
 
     //take a life and update the hangman image
-    public void next() {
+    public synchronized void next() {
         lives--;
         switch (lives) {
             case 0:
@@ -84,7 +84,7 @@ public class Hangman {
         }
     }
 
-    public String draw() {
+    public synchronized String draw() {
         return image;
     }
 
