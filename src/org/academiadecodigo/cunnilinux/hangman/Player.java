@@ -125,8 +125,10 @@ public class Player implements Runnable {
 
             for (int i = 0; i < word.length(); i++) {
 
-                if (playerGuess.equals(word.charAt(i))) {
+                if (playerGuess.equals(String.valueOf(word.charAt(i)))) {
+
                     verify[i] = true;
+
                 }
             }
 
