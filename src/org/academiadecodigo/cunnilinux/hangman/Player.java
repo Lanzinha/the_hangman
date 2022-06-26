@@ -95,9 +95,14 @@ public class Player implements Runnable {
             charPlayerGuess = getPlayerGuess();
             chronometer.stop();
             if (chronometer.getSeconds() > 5) {
-                sendMessage("Your time is up dummy");
+                sendMessage("\nYour time is up dummy");
+
                 hangman.next();
-                hangman.draw();
+                try {
+                    Thread.sleep(1500);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
                 continue;
             }
             if (checkAlreadyGuessed(charArrHiddenWord, charPlayerGuess)) {
