@@ -324,13 +324,13 @@ public class Player implements Runnable {
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
-                    sendMessage(ANSI_RED + "\n                                                CAN´T U READ??" + ANSI_RESET);
+                    sendMessage(ANSI_RED + "\n                                                CAN´T U READ??" + ANSI_RESET + ANSI_CYAN);
                     playerInput = prompt.getUserInput(inGuess);
 
                 }
 
             }
-            server.broadcastMessage(ANSI_YELLOW + "LET THE WAR START!");
+            server.broadcastMessage(ANSI_YELLOW + "                                              LET THE WAR START!" + ANSI_RESET + ANSI_CYAN);
         } catch (IOException e) {
 
             System.err.println("ERROR -  " + e.getMessage());
