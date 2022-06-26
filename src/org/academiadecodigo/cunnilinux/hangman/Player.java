@@ -279,26 +279,26 @@ public class Player implements Runnable {
                 " '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------' \n\n\n");
 
         try {
-            Thread.sleep(1500);
+            Thread.sleep(1800);
 
             sendMessage(ANSI_RESET + ANSI_CYAN + "                     The legend game which you play on papers, now u can play it with your friends on our server, for free!\n\n");
-            Thread.sleep(100);
+            Thread.sleep(1000);
             sendMessage("                     To play, the Rules are:\n\n");
-            Thread.sleep(100);
+            Thread.sleep(1000);
             sendMessage(ANSI_RESET + ANSI_GREEN + "                     1: If you know a letter or the word, go ahead and try to guess.\n\n");
-            Thread.sleep(100);
+            Thread.sleep(1000);
             sendMessage("                     2: Each player will have 5 seconds to guess per round.\n\n");
-            Thread.sleep(100);
+            Thread.sleep(1000);
             sendMessage("                     3: When u fail to guess the letter or word, the hangman starts to take form. \n\n");
-            Thread.sleep(100);
+            Thread.sleep(1000);
             sendMessage("                     4: When the hangman is fully formed, it´s a tie and a new game is started..\n\n");
-            Thread.sleep(100);
+            Thread.sleep(1000);
             sendMessage("                     5: The player with more words completed, wins the game.\n\n");
-            Thread.sleep(100);
+            Thread.sleep(1000);
             sendMessage(ANSI_RESET + ANSI_RED + "                     To quit the game, write /quit\n\n");
-            Thread.sleep(100);
+            Thread.sleep(1000);
             sendMessage(ANSI_RESET + ANSI_YELLOW + "                     GO AHEAD & HAVE SOME FUN WITH THIS AMAZING GAME!!!\n\n");
-            Thread.sleep(100);
+            Thread.sleep(1000);
 
         } catch (InterruptedException e) {
 
