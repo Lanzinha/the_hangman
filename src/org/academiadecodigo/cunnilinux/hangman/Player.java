@@ -11,6 +11,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Player implements Runnable {
+
+    public static final String CLEAR_SCREEN = new String(new char[100]).replace("\0", "\n");
     private static final Logger logger = Logger.getLogger(Player.class.getName());
 
     private String playerName;
@@ -62,18 +64,8 @@ public class Player implements Runnable {
     @Override
     public synchronized void run() {
 
-        //play
-        // escolhe palavra e desenha o nro de ltras com __
-        // desenha hangman
-        // loop players
-        // input Letra player guess
-        // verify letra certa
-        // chama hangman
-        // break se ganhador ou se forcado total
-        //gameover
-
         setName();
-        server.broadcastMessage(this, "SERVER: " + playerName + " has entered the chat");
+
 
         chooseWords = new ChooseWords();
         randomWord = chooseWords.getRandomWord();
@@ -104,8 +96,8 @@ public class Player implements Runnable {
             }
 
             if (checkGuess(charArrWord, charPlayerGuess)) {
+
                 Boolean foundFlag = false;
-                // atualiza HW
                 for (int i = 0; i < charArrWord.length; i++) {
 
                     if (charPlayerGuess == charArrWord[i]) {
@@ -117,7 +109,6 @@ public class Player implements Runnable {
                 }
 
                 if (foundFlag) {
-
 
                     sendMessage("Correct guess: " + charPlayerGuess);
 
@@ -138,13 +129,16 @@ public class Player implements Runnable {
 
             }
         }
+
+        server.broadcastMessage("\nThe word was: " + randomWord + "\n");
+
     }
 
     private boolean checkGameOver(char[] charArrHiddenWord) {
 
         // checkGameOver
         // break se ganhador ou se forcado total
-        //gameover
+        // gameover
         if (hangman.checkGameOver()) {
 
             sendMessage("You lose");
@@ -178,13 +172,17 @@ public class Player implements Runnable {
         return true;
     }
 
-
     private boolean checkGuess(char[] charArrHiddenWord, char charPlayerGuess) {
 
         return checkArrayGuess(charArrHiddenWord, charPlayerGuess);
 
     }
 
+    private boolean checkAlreadyGuessed(char[] charArrHiddenWord, char charPlayerGuess) {
+
+        return checkArrayGuess(charArrHiddenWord, charPlayerGuess);
+
+    }
 
     private boolean checkArrayGuess(char[] charArr, char charPlayerGuess) {
 
@@ -198,12 +196,6 @@ public class Player implements Runnable {
         }
 
         return false;
-    }
-
-    private boolean checkAlreadyGuessed(char[] charArrHiddenWord, char charPlayerGuess) {
-
-        return checkArrayGuess(charArrHiddenWord, charPlayerGuess);
-
     }
 
     public char getPlayerGuess() {
@@ -299,16 +291,17 @@ public class Player implements Runnable {
 
     private void setName() {
 
-        //StringInputScanner nameInput = new StringInputScanner();
-        //nameInput.setMessage("Please input your username: ");
-        //playerName = prompt.getUserInput(nameInput);
-        //Thread.currentThread().setName(playerName);
+        StringInputScanner nameInput = new StringInputScanner();
+        nameInput.setMessage("Please input your username: ");
+        playerName = prompt.getUserInput(nameInput);
 
-        sendMessage("Please input your username: ");
+        //sendMessage("Please input your username: ");
         try {
 
-            playerName = in.readLine();
+            //playerName = in.readLine();
+
             if (!(playerName == null)) {
+                server.broadcastMessage(this, "SERVER: " + playerName + " has entered the chat");
                 Thread.sleep(200);
                 StringInputScanner inGuess = new StringInputScanner();
                 inGuess.setMessage("\n                                      Type 'play' to start your sentence: ");
@@ -326,13 +319,12 @@ public class Player implements Runnable {
 
             }
             server.broadcastMessage(ANSI_YELLOW + "                                              LET THE WAR START!" + ANSI_RESET + ANSI_CYAN);
-        } catch (IOException e) {
-
-            System.err.println("ERROR -  " + e.getMessage());
-            logger.log(Level.WARNING, "ERROR - Unable to close the socket" + e.getMessage());
 
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+
+            System.err.println("ERROR -  " + e.getMessage());
+            logger.log(Level.WARNING, "ERROR - Thread sleep failure" + e.getMessage());
+
         }
 
     }
