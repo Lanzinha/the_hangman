@@ -13,7 +13,7 @@ public class Server {
 
     private static final Logger logger = Logger.getLogger(Server.class.getName());
     public static final int DEFAULT_PORT = 9000;
-    public static final int MAX_PLAYERS = 3;
+    public static final int MAX_PLAYERS = 2;
     private final ExecutorService threadPool;
     private ServerSocket serverSocket;
     private final CopyOnWriteArrayList<Player> players;
@@ -97,6 +97,13 @@ public class Server {
 
         return serverSocket.getInetAddress().getHostAddress() + ":" + serverSocket.getLocalPort();
     }
+
+    public CopyOnWriteArrayList<Player> getPlayers() {
+
+        return players;
+
+    }
+
 
     private void close() {
 
