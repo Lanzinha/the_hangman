@@ -141,7 +141,8 @@ public class Player implements Runnable {
         // gameover
         if (hangman.checkGameOver()) {
 
-            sendMessage("You lose");
+            sendMessage("Your now have a 6k debt, hang in there boy (x");
+            sendMessage(ASCII.LOOSER);
             return true;
 
         }
