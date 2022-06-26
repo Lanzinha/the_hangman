@@ -297,7 +297,7 @@ public class Player implements Runnable {
             Thread.sleep(1000);
             sendMessage(ANSI_RESET + ANSI_RED + "                     To quit the game, write /quit\n\n");
             Thread.sleep(1000);
-            sendMessage(ANSI_RESET + ANSI_YELLOW + "                     GO AHEAD & HAVE SOME FUN WITH THIS AMAZING GAME!!!\n\n");
+            sendMessage(ANSI_RESET + ANSI_CYAN + "                     GO AHEAD & HAVE SOME FUN WITH THIS AMAZING GAME!!!\n\n");
             Thread.sleep(1000);
 
         } catch (InterruptedException e) {
