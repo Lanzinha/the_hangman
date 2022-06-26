@@ -91,9 +91,15 @@ public class Player implements Runnable {
             server.broadcastMessage(String.valueOf(letters));
 
             verifyCorrectLetters = CompWordChar(verifyCorrectLetters);
-
+            if (verifyCorrectLetters.equals("play")) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                server.broadcastMessage("Let the war start!");
+            }
             server.broadcastMessage(hangman.draw());
-
             // Atualizar palavra na tela com a letra certa
 
            /* try {
