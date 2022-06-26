@@ -39,8 +39,11 @@ public class Player implements Runnable {
 
         try {
 
+            // Networking
             out = new BufferedWriter(new OutputStreamWriter(playerSocket.getOutputStream()));
             in = new BufferedReader(new InputStreamReader(playerSocket.getInputStream()));
+
+            // Prompt
             printStream = new PrintStream(playerSocket.getOutputStream());
             prompt = new Prompt(playerSocket.getInputStream(), printStream);
 
