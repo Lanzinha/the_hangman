@@ -73,9 +73,9 @@ public class Player implements Runnable {
         // break se ganhador ou se forcado total
         //gameover
 
-        ChooseWords chooseWords = new ChooseWords();
-        String randomWord = chooseWords.words[(int) (Math.random() * chooseWords.words.length)];
-        String hint = Hint();
+        chooseWords = new ChooseWords();
+        randomWord = chooseWords.words[(int) (Math.random() * chooseWords.words.length)];
+        //String hint = getHint();
 
         setName();
         server.broadcastMessage(this, "SERVER: " + playerName + " has entered the chat");
@@ -174,8 +174,10 @@ public class Player implements Runnable {
      //   }
     //}
 
-    public String Hint() {
+    public String getHint() {
+
         String hint;
+
         if (randomWord.equals(chooseWords.words[0])) {
             return hint = chooseWords.hints[0];
         }
@@ -326,7 +328,7 @@ public class Player implements Runnable {
             playerName = in.readLine();
             if (!(playerName == null)) {
                 Thread.sleep(200);
-                out.write("      Type 'play' to start the game");
+                sendMessage("      Type 'play' to start the game");
             }
         } catch (IOException e) {
 
@@ -346,7 +348,7 @@ public class Player implements Runnable {
 
     public void mainMenu() throws IOException {
 
-        out.write(ANSI_CYAN + "\n" +
+        sendMessage(ANSI_CYAN + "\n" +
                 " .----------------.  .----------------.  .-----------------. .----------------.  .----------------.  .----------------.  .-----------------.\n" +
                 "| .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |\n" +
                 "| |  ____  ____  | || |      __      | || | ____  _____  | || |    ______    | || | ____    ____ | || |      __      | || | ____  _____  | |\n" +
@@ -362,25 +364,24 @@ public class Player implements Runnable {
         try {
             Thread.sleep(1500);
 
-            out.write(ANSI_RESET + ANSI_CYAN + "                     The legend game which you play on papers, now u can play it with your friends on our server, for free!\n\n");
+            sendMessage(ANSI_RESET + ANSI_CYAN + "                     The legend game which you play on papers, now u can play it with your friends on our server, for free!\n\n");
             Thread.sleep(100);
-            out.write("                     To play, the Rules are:\n\n");
+            sendMessage("                     To play, the Rules are:\n\n");
             Thread.sleep(100);
-            out.write(ANSI_RESET + ANSI_GREEN + "                     1: If you know a letter or the word, go ahead and try to guess.\n\n");
+            sendMessage(ANSI_RESET + ANSI_GREEN + "                     1: If you know a letter or the word, go ahead and try to guess.\n\n");
             Thread.sleep(100);
-            out.write("                     2: Each player will have 5 seconds to guess per round.\n\n");
+            sendMessage("                     2: Each player will have 5 seconds to guess per round.\n\n");
             Thread.sleep(100);
-            out.write("                     3: When u fail to guess the letter or word, the hangman starts to take form. \n\n");
+            sendMessage("                     3: When u fail to guess the letter or word, the hangman starts to take form. \n\n");
             Thread.sleep(100);
-            out.write("                     4: When the hangman is fully formed, it´s a tie and a new game is started..\n\n");
+            sendMessage("                     4: When the hangman is fully formed, it´s a tie and a new game is started..\n\n");
             Thread.sleep(100);
-            out.write("                     5: The player with more words completed, wins the game.\n\n");
+            sendMessage("                     5: The player with more words completed, wins the game.\n\n");
             Thread.sleep(100);
-            out.write(ANSI_RESET + ANSI_RED + "                     To quit the game, write /quit\n\n");
+            sendMessage(ANSI_RESET + ANSI_RED + "                     To quit the game, write /quit\n\n");
             Thread.sleep(100);
-            out.write(ANSI_RESET + ANSI_YELLOW + "                     GO AHEAD & HAVE SOME FUN WITH THIS AMAZING GAME!!!\n\n");
+            sendMessage(ANSI_RESET + ANSI_YELLOW + "                     GO AHEAD & HAVE SOME FUN WITH THIS AMAZING GAME!!!\n\n");
             Thread.sleep(100);
-
 
         } catch (InterruptedException e) {
 
