@@ -89,7 +89,7 @@ public class Player implements Runnable {
 
                 sendMessage("Your time is up dummy! You lost a life!");
                 hangman.next();
-                HangmanTime.sleep(2000);
+                HangmanTime.sleep(3000);
                 continue;
 
             }
@@ -123,19 +123,18 @@ public class Player implements Runnable {
 
                 sendMessage("Wrong guess: " + charPlayerGuess);
                 hangman.next();
-                HangmanTime.sleep(2000);
 
             }
 
-            if (checkGameOver(charArrHiddenWord)) {
+            HangmanTime.sleep(2000);
 
-                server.broadcastMessage(hangman.draw());
+            if (checkGameOver(charArrHiddenWord, randomWord)) {
+
                 break;
 
             }
         }
 
-        server.broadcastMessage("The word was: " + randomWord);
         close();
 
     }
@@ -151,20 +150,34 @@ public class Player implements Runnable {
 
     }
 
-    private boolean checkGameOver(char[] charArrHiddenWord) {
+    private boolean checkGameOver(char[] charArrHiddenWord, String word) {
 
         if (hangman.checkGameOver()) {
 
-            sendMessage("Your now have a 6k debt, hang in there boy (x");
+            server.broadcastMessage("The word was: " + word);
+            HangmanTime.sleep(3000);
+
+            server.broadcastMessage(CLEAR_SCREEN);
+            server.broadcastMessage(ASCII.GAME_LOGO);
+
+            sendMessage("You now have a 6k debt, hang in there boy (x");
             sendMessage(ASCII.LOOSER);
+
             return true;
 
         }
 
         if (checkAllWordsGuess(charArrHiddenWord)) {
 
-            sendMessage("You win");
+            server.broadcastMessage("The word was: " + word);
+            HangmanTime.sleep(3000);
+
+            server.broadcastMessage(CLEAR_SCREEN);
+            server.broadcastMessage(ASCII.GAME_LOGO);
+
+            sendMessage("YOU WIN!!!");
             sendMessage(ASCII.WINNER);
+
             return true;
 
         }
