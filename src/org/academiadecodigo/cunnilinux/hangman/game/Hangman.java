@@ -3,7 +3,7 @@ package org.academiadecodigo.cunnilinux.hangman.game;
 import org.academiadecodigo.cunnilinux.hangman.utils.Colors;
 
 public class Hangman {
-    private static int lives = 6;
+    private static volatile int lives = 6;
     private String image = " _____\n" +
             " |/\n" +
             " |\n" +
