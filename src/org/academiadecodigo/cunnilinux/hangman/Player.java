@@ -14,7 +14,6 @@ import java.util.logging.Logger;
 public class Player implements Runnable {
 
     private static final Logger logger = Logger.getLogger(Player.class.getName());
-
     private String playerName;
     private Socket playerSocket;
     private Hangman hangman;
@@ -34,6 +33,7 @@ public class Player implements Runnable {
     private Prompt prompt;
     private PrintStream printStream;
 
+    private int answerDelay = 10;
 
     public Player(Socket playerSocket, Server server) {
 
@@ -68,11 +68,13 @@ public class Player implements Runnable {
 
         setName();
 
+        Chronometer chronometer = new Chronometer();
+
         chooseWords = new ChooseWords();
         randomWord = chooseWords.getRandomWord();
         String hint = chooseWords.getHint(randomWord);
         randomWord = randomWord.toUpperCase();
-        Chronometer chronometer = new Chronometer();
+
         char[] charArrWord = randomWord.toCharArray();
         char[] charArrHiddenWord = randomWord.toCharArray();
         Arrays.fill(charArrHiddenWord, '*');
@@ -80,29 +82,38 @@ public class Player implements Runnable {
         System.out.print(randomWord + "\n");
         System.out.print(charArrHiddenWord);
 
-        server.broadcastMessage("\n" + String.valueOf(charArrHiddenWord) + "\n");
         server.broadcastMessage(hint + "\n");
         server.broadcastMessage(hangman.draw());
+        server.broadcastMessage("\n" + String.valueOf(charArrHiddenWord) + "\n");
 
         char charPlayerGuess;
         while (playerSocket.isConnected()) {
 
             server.broadcastMessage(CLEAR_SCREEN);
+            server.broadcastMessage(ASCII.GAME_LOGO);
+
+            server.broadcastMessage(hint + "\n");
             server.broadcastMessage(hangman.draw());
             server.broadcastMessage("\n" + String.valueOf(charArrHiddenWord) + "\n");
 
             chronometer.start();
             charPlayerGuess = getPlayerGuess();
             chronometer.stop();
-            if (chronometer.getSeconds() > 5) {
+            if (chronometer.getSeconds() > answerDelay) {
+
                 sendMessage("\nYour time is up dummy");
 
                 hangman.next();
                 try {
+
                     Thread.sleep(1500);
+
                 } catch (InterruptedException e) {
+
                     throw new RuntimeException(e);
+
                 }
+
                 continue;
             }
             if (checkAlreadyGuessed(charArrHiddenWord, charPlayerGuess)) {
@@ -147,6 +158,7 @@ public class Player implements Runnable {
         }
 
         server.broadcastMessage("\nThe word was: " + randomWord + "\n");
+        close();
 
     }
 
@@ -358,19 +370,7 @@ public class Player implements Runnable {
 
         sendMessage(ANSI_CLEAR_SCREEN);
         sendMessage(ANSI_CYAN + ASCII.GAME_LOGO);
-        /*
-                " .----------------.  .----------------.  .-----------------. .----------------.  .----------------.  .----------------.  .-----------------.\n" +
-                "| .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |\n" +
-                "| |  ____  ____  | || |      __      | || | ____  _____  | || |    ______    | || | ____    ____ | || |      __      | || | ____  _____  | |\n" +
-                "| | |_   ||   _| | || |     /  \\     | || ||_   \\|_   _| | || |  .' ___  |   | || ||_   \\  /   _|| || |     /  \\     | || ||_   \\|_   _| | |\n" +
-                "| |   | |__| |   | || |    / /\\ \\    | || |  |   \\ | |   | || | / .'   \\_|   | || |  |   \\/   |  | || |    / /\\ \\    | || |  |   \\ | |   | |\n" +
-                "| |   |  __  |   | || |   / ____ \\   | || |  | |\\ \\| |   | || | | |    ____  | || |  | |\\  /| |  | || |   / ____ \\   | || |  | |\\ \\| |   | |\n" +
-                "| |  _| |  | |_  | || | _/ /    \\ \\_ | || | _| |_\\   |_  | || | \\ `.___]  _| | || | _| |_\\/_| |_ | || | _/ /    \\ \\_ | || | _| |_\\   |_  | |\n" +
-                "| | |____||____| | || ||____|  |____|| || ||_____|\\____| | || |  `._____.'   | || ||_____||_____|| || ||____|  |____|| || ||_____|\\____| | |\n" +
-                "| |              | || |              | || |              | || |              | || |              | || |              | || |              | |\n" +
-                "| '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |\n" +
-                " '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------' \n\n\n");
-        */
+
         try {
             Thread.sleep(1800);
 
@@ -380,9 +380,9 @@ public class Player implements Runnable {
             Thread.sleep(sleepTime);
             sendMessage(ANSI_RESET + ANSI_GREEN + "                     1: If you know a letter or the word, go ahead and try to guess.\n\n");
             Thread.sleep(sleepTime);
-            sendMessage("                     2: Each player will have 5 seconds to guess per round.\n\n");
+            sendMessage("                     2: Each player will have 10 seconds to guess per round.\n\n");
             Thread.sleep(sleepTime);
-            sendMessage("                     3: When u fail to guess the letter or word, the hangman starts to take form. \n\n");
+            sendMessage("                     3: When you fail to guess the letter or word, the hangman starts to take form. \n\n");
             Thread.sleep(sleepTime);
             sendMessage("                     4: When the hangman is fully formed, it´s a tie and a new game is started..\n\n");
             Thread.sleep(sleepTime);
