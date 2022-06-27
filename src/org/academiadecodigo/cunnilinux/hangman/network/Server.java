@@ -16,7 +16,7 @@ public class Server {
     private static final Logger logger = Logger.getLogger(Server.class.getName());
     public static final int DEFAULT_PORT = 9000;
     public static final int MAX_PLAYERS = 2;
-    private final ExecutorService threadPool;
+    private final ExecutorService playerPool;
     private ServerSocket serverSocket;
     private final CopyOnWriteArrayList<Player> players;
     private final int portNumber;
@@ -24,7 +24,7 @@ public class Server {
     public Server(int portNumber) {
 
         players = new CopyOnWriteArrayList<>();
-        threadPool = Executors.newCachedThreadPool();
+        playerPool = Executors.newCachedThreadPool();
         this.portNumber = portNumber;
 
     }
@@ -45,7 +45,7 @@ public class Server {
 
                 Player player = new Player(playerSocket, this);
                 players.add(player);
-                threadPool.submit(player);
+                playerPool.submit(player);
 
             }
 
@@ -115,6 +115,8 @@ public class Server {
     }
 
     private void close() {
+
+        playerPool.shutdownNow();
 
         try {
 

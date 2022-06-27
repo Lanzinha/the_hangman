@@ -6,7 +6,7 @@ import org.academiadecodigo.bootcamp.scanners.string.StringInputScanner;
 import org.academiadecodigo.cunnilinux.hangman.ui.ASCII;
 import org.academiadecodigo.cunnilinux.hangman.network.Server;
 import org.academiadecodigo.cunnilinux.hangman.utils.Chronometer;
-import org.academiadecodigo.cunnilinux.hangman.utils.Colors;
+import org.academiadecodigo.cunnilinux.hangman.utils.ConsoleColor;
 import org.academiadecodigo.cunnilinux.hangman.utils.HangmanTime;
 
 import java.io.*;
@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 
 public class Player implements Runnable {
 
+    public static final int ANSWER_DELAY = 10;
     private static final Logger logger = Logger.getLogger(Player.class.getName());
     private String playerName;
     private final Socket playerSocket;
@@ -26,7 +27,7 @@ public class Player implements Runnable {
     private final Server server;
     private boolean quit;
     public static final String CLEAR_SCREEN = new String(new char[100]).replace("\0", "\n");
-    public static final String ANSI_CLEAR_SCREEN = "\033[H\033[2J";
+    //public static final String CLEAR_SCREEN = "\033[H\033[2J";
     private Prompt prompt;
 
     public Player(Socket playerSocket, Server server) {
@@ -76,8 +77,6 @@ public class Player implements Runnable {
         System.out.print(randomWord + "\n");
 
         char charPlayerGuess;
-        int answerDelay = 10;
-
         while (playerSocket.isConnected()) {
 
             drawStandardScreen(hint, hangman.draw(), charArrHiddenWord);
@@ -85,7 +84,7 @@ public class Player implements Runnable {
             chronometer.start();
             charPlayerGuess = getPlayerGuess();
             chronometer.stop();
-            if (chronometer.getSeconds() > answerDelay) {
+            if (chronometer.getSeconds() > ANSWER_DELAY) {
 
                 sendMessage("Your time is up dummy! You lost a life!");
                 hangman.next();
@@ -142,7 +141,7 @@ public class Player implements Runnable {
     public void drawStandardScreen(String hint, String hangmanImage, char[] charArrHiddenWord) {
 
         server.broadcastMessage(CLEAR_SCREEN);
-        server.broadcastMessage(ASCII.GAME_LOGO);
+        server.broadcastMessage(ASCII.GAME_LOGO_COLORED);
         server.broadcastMessage(hint);
         server.broadcastMessage(hangmanImage);
         server.broadcastMessage(String.valueOf(charArrHiddenWord));
@@ -158,7 +157,7 @@ public class Player implements Runnable {
             HangmanTime.sleep(3000);
 
             server.broadcastMessage(CLEAR_SCREEN);
-            server.broadcastMessage(ASCII.GAME_LOGO);
+            server.broadcastMessage(ASCII.GAME_LOGO_COLORED);
 
             sendMessage("You now have a 6k debt, hang in there boy (x");
             sendMessage(ASCII.LOOSER);
@@ -173,7 +172,7 @@ public class Player implements Runnable {
             HangmanTime.sleep(3000);
 
             server.broadcastMessage(CLEAR_SCREEN);
-            server.broadcastMessage(ASCII.GAME_LOGO);
+            server.broadcastMessage(ASCII.GAME_LOGO_COLORED);
 
             sendMessage("YOU WIN!!!");
             sendMessage(ASCII.WINNER);
@@ -374,14 +373,14 @@ public class Player implements Runnable {
                 while ((!playerInput.equals("play"))) {
 
                     HangmanTime.sleep(1000);
-                    sendMessage(Colors.ANSI_RED + "\n                                                CAN´T U READ??" + Colors.ANSI_RESET + Colors.ANSI_CYAN);
+                    sendMessage(ConsoleColor.RED + "\n                                                CAN´T U READ??" + ConsoleColor.RESET + ConsoleColor.CYAN);
                     playerInput = prompt.getUserInput(inGuess);
 
                 }
             }
 
-            //server.broadcastMessage(Colors.ANSI_YELLOW + "\n                                              LET THE WAR START!\n" + Colors.ANSI_RESET + Colors.ANSI_CYAN);
-            sendMessage(Colors.ANSI_YELLOW + "\n                                              LET THE WAR START!\n" + Colors.ANSI_RESET + Colors.ANSI_CYAN);
+            //server.broadcastMessage(Colors.YELLOW + "\n                                              LET THE WAR START!\n" + Colors.RESET + Colors.CYAN);
+            sendMessage(ConsoleColor.YELLOW + "\n                                              LET THE WAR START!\n" + ConsoleColor.RESET + ConsoleColor.CYAN);
             HangmanTime.sleep(3000);
 
         } catch (InterruptedException e) {
@@ -402,18 +401,18 @@ public class Player implements Runnable {
 
         int sleepTime = 500;
 
-        sendMessage(ANSI_CLEAR_SCREEN);
-        sendMessage(Colors.ANSI_CYAN + ASCII.GAME_LOGO);
+        sendMessage(CLEAR_SCREEN);
+        sendMessage(ASCII.GAME_LOGO_COLORED);
 
         try {
 
             Thread.sleep(1800);
 
-            sendMessage(Colors.ANSI_RESET + Colors.ANSI_CYAN + "                     The legend game which you play on papers, now u can play it with your friends on our server, for free!\n\n");
+            sendMessage(ConsoleColor.CYAN + "                     The legend game which you play on papers, now u can play it with your friends on our server, for free!\n\n");
             Thread.sleep(sleepTime);
             sendMessage("                     To play, the Rules are:\n\n");
             Thread.sleep(sleepTime);
-            sendMessage(Colors.ANSI_RESET + Colors.ANSI_GREEN + "                     1: If you know a letter or the word, go ahead and try to guess.\n\n");
+            sendMessage(ConsoleColor.GREEN + "                     1: If you know a letter or the word, go ahead and try to guess.\n\n");
             Thread.sleep(sleepTime);
             sendMessage("                     2: Each player will have 10 seconds to guess per round.\n\n");
             Thread.sleep(sleepTime);
@@ -423,9 +422,9 @@ public class Player implements Runnable {
             Thread.sleep(sleepTime);
             sendMessage("                     5: The player with more words completed, wins the game.\n\n");
             Thread.sleep(sleepTime);
-            sendMessage(Colors.ANSI_RESET + Colors.ANSI_RED + "                     To quit the game, write /quit\n\n");
+            sendMessage(ConsoleColor.RED + "                     To quit the game, write /quit\n\n");
             Thread.sleep(sleepTime);
-            sendMessage(Colors.ANSI_RESET + Colors.ANSI_CYAN + "                     GO AHEAD & HAVE SOME FUN WITH THIS AMAZING GAME!!!\n\n");
+            sendMessage(ConsoleColor.CYAN + "                     GO AHEAD & HAVE SOME FUN WITH THIS AMAZING GAME!!!\n\n");
             sendMessage("");
             Thread.sleep(sleepTime);
 

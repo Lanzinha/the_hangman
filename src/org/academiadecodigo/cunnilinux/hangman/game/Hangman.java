@@ -1,10 +1,10 @@
 package org.academiadecodigo.cunnilinux.hangman.game;
 
-import org.academiadecodigo.cunnilinux.hangman.utils.Colors;
+import org.academiadecodigo.cunnilinux.hangman.utils.ConsoleColor;
 
 public class Hangman {
     private static volatile int lives = 6;
-    private String image = " _____\n" +
+    private String imgHangman = " _____\n" +
             " |/\n" +
             " |\n" +
             " |\n" +
@@ -18,7 +18,7 @@ public class Hangman {
 
         switch (--lives) {
             case 0:
-                image = " _____\n" +
+                imgHangman = " _____\n" +
                         " |/  |\n" +
                         " |   0\n" +
                         " |  -O-\n" +
@@ -30,7 +30,7 @@ public class Hangman {
                 break;
 
             case 1:
-                image = " _____\n" +
+                imgHangman = " _____\n" +
                         " |/  |\n" +
                         " |   0\n" +
                         " |  -O-\n" +
@@ -41,7 +41,7 @@ public class Hangman {
                 break;
 
             case 2:
-                image = " _____\n" +
+                imgHangman = " _____\n" +
                         " |/  |\n" +
                         " |   0\n" +
                         " |  -O\n" +
@@ -52,7 +52,7 @@ public class Hangman {
                 break;
 
             case 3:
-                image = " _____\n" +
+                imgHangman = " _____\n" +
                         " |/  |\n" +
                         " |   0\n" +
                         " |   O\n" +
@@ -63,7 +63,7 @@ public class Hangman {
                 break;
 
             case 4:
-                image = " _____\n" +
+                imgHangman = " _____\n" +
                         " |/  |\n" +
                         " |   0\n" +
                         " |\n" +
@@ -74,7 +74,7 @@ public class Hangman {
                 break;
 
             case 5:
-                image = " _____\n" +
+                imgHangman = " _____\n" +
                         " |/  |\n" +
                         " |\n" +
                         " |\n" +
@@ -88,19 +88,13 @@ public class Hangman {
 
     public synchronized String draw() {
 
-        return Colors.ANSI_RED + image + Colors.ANSI_RESET;
+        return ConsoleColor.RED + imgHangman + ConsoleColor.RESET;
 
     }
 
     public synchronized boolean checkGameOver() {
 
         return lives == 0;
-
-    }
-
-    public synchronized static int getLives() {
-
-        return lives;
 
     }
 }

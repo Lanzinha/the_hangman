@@ -11,7 +11,7 @@ public class NewMain {
             int port = args.length > 0 ? Integer.parseInt(args[0]) : NewServer.DEFAULT_PORT;
 
             NewServer server = new NewServer(port);
-            server.start();
+            server.listen();
 
         } catch (NumberFormatException e) {
 
