@@ -226,13 +226,31 @@ public class Player implements Runnable {
         return false;
     }
 
-    public char getPlayerGuess() {
+    public synchronized char getPlayerGuess() {
 
-        HangmanStringInputScanner inputGuess = new HangmanStringInputScanner();
-        inputGuess.setMessage("Please input your guess: ");
-        inputGuess.setError("\nOnly a single letter is allowed!\n");
+        wait();
+//        HangmanStringInputScanner inputGuess = new HangmanStringInputScanner();
+//        inputGuess.setMessage("Please input your guess: ");
+//        inputGuess.setError("\nOnly a single letter is allowed!\n");
 
-        return prompt.getUserInput(inputGuess).charAt(0);
+        //server.broadcastMessage("Please input your guess: ");
+        sendMessage("Please input your guess: ");
+
+        //return prompt.getUserInput(inputGuess).charAt(0);
+        String answer = null;
+        try {
+
+            answer = readMessage().toUpperCase();
+
+        } catch (IOException e) {
+
+            throw new RuntimeException(e);
+
+        }
+
+        server.broadcastMessage(answer);
+
+        return answer.charAt(0);
 
     }
 
@@ -343,7 +361,8 @@ public class Player implements Runnable {
                 }
             }
 
-            server.broadcastMessage(Colors.ANSI_YELLOW + "\n                                              LET THE WAR START!\n" + Colors.ANSI_RESET + Colors.ANSI_CYAN);
+            //server.broadcastMessage(Colors.ANSI_YELLOW + "\n                                              LET THE WAR START!\n" + Colors.ANSI_RESET + Colors.ANSI_CYAN);
+            sendMessage(Colors.ANSI_YELLOW + "\n                                              LET THE WAR START!\n" + Colors.ANSI_RESET + Colors.ANSI_CYAN);
             HangmanTime.sleep(3000);
 
         } catch (InterruptedException e) {
