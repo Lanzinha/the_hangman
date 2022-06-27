@@ -228,29 +228,48 @@ public class Player implements Runnable {
 
     public synchronized char getPlayerGuess() {
 
-        wait();
-//        HangmanStringInputScanner inputGuess = new HangmanStringInputScanner();
-//        inputGuess.setMessage("Please input your guess: ");
-//        inputGuess.setError("\nOnly a single letter is allowed!\n");
+        HangmanStringInputScanner inputGuess = new HangmanStringInputScanner();
+        inputGuess.setMessage("Please input your guess: ");
+        inputGuess.setError("\nOnly a single letter is allowed!\n");
 
         //server.broadcastMessage("Please input your guess: ");
-        sendMessage("Please input your guess: ");
+        //sendMessage("Please input your guess: ");
 
-        //return prompt.getUserInput(inputGuess).charAt(0);
-        String answer = null;
-        try {
+        //wait();
+        return prompt.getUserInput(inputGuess).charAt(0);
+//        String answer = null;
+//        try {
+//
+//            answer = readMessage().toUpperCase();
+//
+//        } catch (IOException e) {
+//
+//            throw new RuntimeException(e);
+//
+//        }
+//
+//        server.broadcastMessage(answer);
+//
+//        //notifyAll();
+//
+//        return answer.charAt(0);
 
-            answer = readMessage().toUpperCase();
-
-        } catch (IOException e) {
-
-            throw new RuntimeException(e);
-
-        }
-
-        server.broadcastMessage(answer);
-
-        return answer.charAt(0);
+//        while (isFull()) {
+//
+//            try {
+//
+//                wait();
+//
+//            } catch (InterruptedException e) {
+//
+//                System.err.println("ERROR: Thread interrupted - " + e.getMessage());
+//
+//            }
+//        }
+//
+//        queue.offerLast(data);
+//
+//        notifyAll();
 
     }
 
