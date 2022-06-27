@@ -1,14 +1,13 @@
-package org.academiadecodigo.cunnilinux.hangman;
+package org.academiadecodigo.cunnilinux.hangman.game;
 
 import java.util.*;
 
-public class ChooseWords {
-
+public class Words {
 
     HashMap<String, String> words = new HashMap<String, String>();
 
+    public Words() {
 
-    public ChooseWords() {
         words.put("programming", "HINT: Your word is related with programming.");
         words.put("abstraction", "HINT: Your word is related with programming.");
         words.put("polymorphism", "HINT: Your word is related with programming.");
@@ -28,20 +27,20 @@ public class ChooseWords {
         Set<String> keySet = words.keySet();
         List<String> keyList = new ArrayList<>(keySet);
 
-        int size = keyList.size();
-        int randIdx = new Random().nextInt(size);
+        int randIdx = new Random().nextInt(keyList.size());
 
-        String randomKey = keyList.get(randIdx);
-        String randomValue = words.get(randomKey);
-        return randomKey;
+        return keyList.get(randIdx);
     }
 
     public int getSize() {
+
         return words.size();
+
     }
 
     public String getHint(String word) {
-        return words.get(word);
-    }
 
+        return words.get(word);
+
+    }
 }

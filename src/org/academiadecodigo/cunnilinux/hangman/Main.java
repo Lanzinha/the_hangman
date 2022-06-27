@@ -1,5 +1,7 @@
 package org.academiadecodigo.cunnilinux.hangman;
 
+import org.academiadecodigo.cunnilinux.hangman.network.Server;
+
 public class Main {
     public static void main(String[] args) {
 

@@ -1,4 +1,6 @@
-package org.academiadecodigo.cunnilinux.hangman;
+package org.academiadecodigo.cunnilinux.hangman.game;
+
+import org.academiadecodigo.cunnilinux.hangman.utils.Colors;
 
 public class Hangman {
     private static int lives = 6;
@@ -13,8 +15,8 @@ public class Hangman {
 
     //take a life and update the hangman image
     public synchronized void next() {
-        lives--;
-        switch (lives) {
+
+        switch (--lives) {
             case 0:
                 image = " _____\n" +
                         " |/  |\n" +
@@ -85,7 +87,9 @@ public class Hangman {
     }
 
     public synchronized String draw() {
-        return image;
+
+        return Colors.ANSI_RED + image + Colors.ANSI_RESET;
+
     }
 
     public synchronized boolean checkGameOver() {
@@ -94,7 +98,9 @@ public class Hangman {
 
     }
 
-    public static int getLives() {
+    public synchronized static int getLives() {
+
         return lives;
+
     }
 }
