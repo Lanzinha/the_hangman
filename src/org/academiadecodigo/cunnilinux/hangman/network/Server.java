@@ -105,6 +105,7 @@ public class Server {
         }
 
         return serverSocket.getInetAddress().getHostAddress() + ":" + serverSocket.getLocalPort();
+
     }
 
     public CopyOnWriteArrayList<Player> getPlayers() {
@@ -129,6 +130,8 @@ public class Server {
             logger.log(Level.WARNING, "ERROR - Unable to close the socket" + e.getMessage());
 
         }
+
+        System.exit(1);
 
     }
 }
