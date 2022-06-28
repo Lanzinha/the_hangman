@@ -1,7 +1,7 @@
 package org.academiadecodigo.cunnilinux.hangman.network;
 
 import org.academiadecodigo.cunnilinux.hangman.game.Room;
-import org.academiadecodigo.cunnilinux.hangman.utils.ConsoleColor;
+import org.academiadecodigo.cunnilinux.hangman.ui.ConsoleColor;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -70,7 +70,6 @@ public class NewServer {
     }
 
     private void serve(Socket clientSocket) {
-
 
         Room lastRoom = getLastRoom();
         if (lastRoom.getPlayers().size() >= lastRoom.getMaxRoomSize() || lastRoom.isGameStarted()) {

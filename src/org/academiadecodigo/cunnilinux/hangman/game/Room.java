@@ -1,6 +1,6 @@
 package org.academiadecodigo.cunnilinux.hangman.game;
 
-import org.academiadecodigo.cunnilinux.hangman.utils.ConsoleColor;
+import org.academiadecodigo.cunnilinux.hangman.ui.ConsoleColor;
 import org.academiadecodigo.cunnilinux.hangman.utils.HangmanTime;
 
 import java.net.Socket;
@@ -41,7 +41,7 @@ public class Room implements Runnable {
 
     private void awaitGameStart() {
 
-        logger.log(Level.INFO, ConsoleColor.color(ConsoleColor.GREEN_BACKGROUND, ConsoleColor.MAGENTA_BOLD, "Room #" + roomNumber + ": waiting on game to start..."));
+        logger.log(Level.INFO, ConsoleColor.color(ConsoleColor.GREEN_BACKGROUND, ConsoleColor.MAGENTA_BOLD, "Room #" + roomNumber + ": Waiting on game to start..."));
 
         while (!gameStarted) {
 
@@ -99,7 +99,8 @@ public class Room implements Runnable {
 
     public synchronized void addPlayer(Socket socketPlayer, Room room) {
 
-        NewPlayer player = new NewPlayer(socketPlayer, room);
+        int playerNumber = players.size() + 1;
+        NewPlayer player = new NewPlayer(socketPlayer, room, playerNumber);
         this.players.add(player);
         this.playerPool.submit(player);
 
@@ -109,6 +110,12 @@ public class Room implements Runnable {
 
         playerPool.shutdownNow();
         System.exit(1);
+
+    }
+
+    public int getRoomNumber() {
+
+        return roomNumber;
 
     }
 }

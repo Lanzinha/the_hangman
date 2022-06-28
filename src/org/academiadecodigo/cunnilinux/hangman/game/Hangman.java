@@ -1,6 +1,6 @@
 package org.academiadecodigo.cunnilinux.hangman.game;
 
-import org.academiadecodigo.cunnilinux.hangman.utils.ConsoleColor;
+import org.academiadecodigo.cunnilinux.hangman.ui.ConsoleColor;
 
 public class Hangman {
     private static volatile int lives = 6;

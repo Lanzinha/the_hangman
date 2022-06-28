@@ -1,4 +1,4 @@
-package org.academiadecodigo.cunnilinux.hangman.utils;
+package org.academiadecodigo.cunnilinux.hangman.ui;
 
 public enum ConsoleColor {
 

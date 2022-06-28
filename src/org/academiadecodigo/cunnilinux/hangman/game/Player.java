@@ -3,10 +3,11 @@ package org.academiadecodigo.cunnilinux.hangman.game;
 import main.java.org.academiadecodigo.bootcamp.scanners.string.HangmanStringInputScanner;
 import org.academiadecodigo.bootcamp.Prompt;
 import org.academiadecodigo.bootcamp.scanners.string.StringInputScanner;
-import org.academiadecodigo.cunnilinux.hangman.ui.ASCII;
+import org.academiadecodigo.cunnilinux.hangman.ui.AsciiArt;
 import org.academiadecodigo.cunnilinux.hangman.network.Server;
+import org.academiadecodigo.cunnilinux.hangman.ui.DisplayMessages;
 import org.academiadecodigo.cunnilinux.hangman.utils.Chronometer;
-import org.academiadecodigo.cunnilinux.hangman.utils.ConsoleColor;
+import org.academiadecodigo.cunnilinux.hangman.ui.ConsoleColor;
 import org.academiadecodigo.cunnilinux.hangman.utils.HangmanTime;
 
 import java.io.*;
@@ -26,8 +27,6 @@ public class Player implements Runnable {
     private BufferedReader in;
     private final Server server;
     private boolean quit;
-    public static final String CLEAR_SCREEN = new String(new char[100]).replace("\0", "\n");
-    //public static final String CLEAR_SCREEN = "\033[H\033[2J";
     private Prompt prompt;
 
     public Player(Socket playerSocket, Server server) {
@@ -140,8 +139,8 @@ public class Player implements Runnable {
 
     public void drawStandardScreen(String hint, String hangmanImage, char[] charArrHiddenWord) {
 
-        server.broadcastMessage(CLEAR_SCREEN);
-        server.broadcastMessage(ASCII.GAME_LOGO_COLORED);
+        server.broadcastMessage(DisplayMessages.CLEAR_SCREEN);
+        server.broadcastMessage(DisplayMessages.logo());
         server.broadcastMessage(hint);
         server.broadcastMessage(hangmanImage);
         server.broadcastMessage(String.valueOf(charArrHiddenWord));
@@ -156,11 +155,11 @@ public class Player implements Runnable {
             server.broadcastMessage("The word was: " + word);
             HangmanTime.sleep(3000);
 
-            server.broadcastMessage(CLEAR_SCREEN);
-            server.broadcastMessage(ASCII.GAME_LOGO_COLORED);
+            server.broadcastMessage(DisplayMessages.CLEAR_SCREEN);
+            server.broadcastMessage(DisplayMessages.logo());
 
             sendMessage("You now have a 6k debt, hang in there boy (x");
-            sendMessage(ASCII.LOOSER);
+            sendMessage(AsciiArt.LOOSER);
 
             return true;
 
@@ -171,11 +170,11 @@ public class Player implements Runnable {
             server.broadcastMessage("The word was: " + word);
             HangmanTime.sleep(3000);
 
-            server.broadcastMessage(CLEAR_SCREEN);
-            server.broadcastMessage(ASCII.GAME_LOGO_COLORED);
+            server.broadcastMessage(DisplayMessages.CLEAR_SCREEN);
+            server.broadcastMessage(DisplayMessages.logo());
 
             sendMessage("YOU WIN!!!");
-            sendMessage(ASCII.WINNER);
+            sendMessage(AsciiArt.WINNER);
 
             return true;
 
@@ -401,8 +400,8 @@ public class Player implements Runnable {
 
         int sleepTime = 500;
 
-        sendMessage(CLEAR_SCREEN);
-        sendMessage(ASCII.GAME_LOGO_COLORED);
+        sendMessage(DisplayMessages.CLEAR_SCREEN);
+        sendMessage(DisplayMessages.logo());
 
         try {
 
