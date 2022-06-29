@@ -79,6 +79,22 @@ public class Room implements Runnable {
 
     }
 
+    public synchronized void addPlayer(Socket socketPlayer, Room room) {
+
+        int playerNumber = players.size() + 1;
+        NewPlayer player = new NewPlayer(socketPlayer, room, playerNumber);
+        this.players.add(player);
+        this.playerPool.submit(player);
+
+    }
+
+    private void close() {
+
+        playerPool.shutdownNow();
+        System.exit(1);
+
+    }
+
     public CopyOnWriteArrayList<NewPlayer> getPlayers() {
 
         return players;
@@ -97,19 +113,9 @@ public class Room implements Runnable {
 
     }
 
-    public synchronized void addPlayer(Socket socketPlayer, Room room) {
+    public void setGameStarted(boolean gameStarted) {
 
-        int playerNumber = players.size() + 1;
-        NewPlayer player = new NewPlayer(socketPlayer, room, playerNumber);
-        this.players.add(player);
-        this.playerPool.submit(player);
-
-    }
-
-    private void close() {
-
-        playerPool.shutdownNow();
-        System.exit(1);
+        this.gameStarted = gameStarted;
 
     }
 

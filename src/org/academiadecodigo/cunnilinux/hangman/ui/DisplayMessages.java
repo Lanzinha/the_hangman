@@ -1,11 +1,5 @@
 package org.academiadecodigo.cunnilinux.hangman.ui;
 
-import org.academiadecodigo.bootcamp.InputScanner;
-
-import java.io.InputStream;
-import java.io.PrintStream;
-import java.util.Scanner;
-
 import static org.academiadecodigo.cunnilinux.hangman.ui.AsciiArt.LOGO;
 
 public class DisplayMessages {
@@ -19,6 +13,12 @@ public class DisplayMessages {
     public static String logo() {
 
         return ConsoleColor.color(ConsoleColor.GREEN_BOLD, LOGO);
+
+    }
+
+    public static String header() {
+
+        return CLEAR_SCREEN + logo();
 
     }
 }

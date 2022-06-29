@@ -279,7 +279,6 @@ public class Player implements Runnable {
 
             quit = true;
 
-
         }
 
         return playerName + ": " + line;
@@ -400,8 +399,7 @@ public class Player implements Runnable {
 
         int sleepTime = 500;
 
-        sendMessage(DisplayMessages.CLEAR_SCREEN);
-        sendMessage(DisplayMessages.logo());
+        sendMessage(DisplayMessages.CLEAR_SCREEN + DisplayMessages.logo());
 
         try {
 
