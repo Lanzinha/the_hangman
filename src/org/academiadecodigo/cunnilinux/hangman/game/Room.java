@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 public class Room implements Runnable {
 
     private final Logger logger = Logger.getLogger(this.getClass().getSimpleName());
-    public final int ROOM_SIZE = 1;
+    public final int ROOM_SIZE = 2;
     private int roomNumber;
     private CopyOnWriteArrayList<NewPlayer> players;
     private ExecutorService playerPool;
@@ -62,11 +62,13 @@ public class Room implements Runnable {
 
     private void awaitPlayers() {
 
-        logger.log(Level.INFO, ConsoleColor.color(ConsoleColor.GREEN_BACKGROUND, ConsoleColor.MAGENTA_BOLD, "Room #" + roomNumber + ": Waiting on players to join the room..."));
+        logger.log(Level.INFO, ConsoleColor.color(ConsoleColor.GREEN_BACKGROUND,
+                ConsoleColor.MAGENTA_BOLD,
+                "Room #" + roomNumber + ": Waiting on players to join the room..."));
 
         while (this.players.size() < ROOM_SIZE && !gameStarted) {
 
-            HangmanTime.sleep(100);
+            HangmanTime.sleep(1000);
 
         }
 
@@ -81,11 +83,30 @@ public class Room implements Runnable {
 
     public synchronized void addPlayer(Socket socketPlayer, Room room) {
 
-        int playerNumber = players.size() + 1;
-        NewPlayer player = new NewPlayer(socketPlayer, room, playerNumber);
+        NewPlayer player = new NewPlayer(socketPlayer, room, players.size() + 1);
         this.players.add(player);
         this.playerPool.submit(player);
 
+    }
+
+    public synchronized void removePlayer(NewPlayer player) {
+
+        logger.log(Level.INFO, ConsoleColor.color(ConsoleColor.GREEN_BACKGROUND,
+                                ConsoleColor.MAGENTA_BOLD,
+                             "Room #" + roomNumber + ": Removing " + player.bracketPlayerName() + " from the room..."));
+        players.remove(player);
+
+        if(players.size() != 0) {
+
+            players.stream()
+                    .map(NewPlayer::isAdmin)
+                    .forEach(System.out::println);
+
+        } else {
+
+            System.out.println("Empty room!");
+
+        }
     }
 
     private void close() {

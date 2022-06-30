@@ -106,6 +106,10 @@ public class NewPlayer implements Runnable {
         showRules(prompt);
         this.ready = true;
 
+        room.getPlayers().stream()
+                .map(NewPlayer::isAdmin)
+                .forEach(System.out::println);
+
         while (!this.gameStarted) {
 
             if (admin) {
@@ -123,6 +127,7 @@ public class NewPlayer implements Runnable {
                 switch (prompt.getUserInput(menuInputScanner)) {
 
                     case 1:
+
                         sendMessage("\nStarting game...\n");
 
                         if (checkAllReady()) {
@@ -138,18 +143,22 @@ public class NewPlayer implements Runnable {
                         break;
 
                     case 2:
+
                         sendMessage("\nPlayers connected to the room #" + room.getRoomNumber() + "...\n");
                         showPlayers(prompt);
                         break;
 
                     case 3:
-                        sendMessage("\nWaiting on more players... There are currently " + room.getPlayers().size() + "players connected.");
+
+                        sendMessage("\nWaiting for more players... There are currently " + room.getPlayers().size() + "players connected.");
                         break;
 
                     case 4:
+
                         sendMessage("\nGoodbye fellow " + bracketPlayerName() + "!\n");
                         close();
                         break;
+
                     default:
                         break;
 
@@ -168,7 +177,10 @@ public class NewPlayer implements Runnable {
         };
 
         MenuInputScanner menuInputScanner = new MenuInputScanner(menuOptions);
-        menuInputScanner.setMessage(DisplayMessages.header() + bracketPlayerName() + " - other players are not ready as yet");
+        menuInputScanner.setMessage(DisplayMessages.header() + "Players connected:\n" +
+                room.getPlayers().stream()
+                        .map(player -> bracketPlayerName() + "\n")
+                        .reduce("", (acc, name) -> acc + name));
         prompt.getUserInput(menuInputScanner);
 
     }
@@ -179,7 +191,7 @@ public class NewPlayer implements Runnable {
                 "Back to previous menu"
         };
         MenuInputScanner menuInputScanner = new MenuInputScanner(menuOptions);
-        menuInputScanner.setMessage(DisplayMessages.header() + bracketPlayerName() + " - other players are not ready as yet");
+        menuInputScanner.setMessage(DisplayMessages.header() + bracketPlayerName() + " - the other players are not ready as yet");
         prompt.getUserInput(menuInputScanner);
 
     }
@@ -276,10 +288,12 @@ public class NewPlayer implements Runnable {
 
                 logger.log(Level.INFO, ConsoleColor.color(ConsoleColor.WHITE_BACKGROUND_BRIGHT,
                         ConsoleColor.RED_BOLD,
-                        "Room # " + room.getRoomNumber() + " - PLAYER #" + playerNumber + " - " + bracketPlayerName() + ": " + "closing client socket for " + getAddress()));
+                        "Room #" + room.getRoomNumber() + " - PLAYER #" + playerNumber + " - " + bracketPlayerName() + ": " + "Closing client socket for " + getAddress()));
                 playerSocket.close();
 
             }
+
+            room.removePlayer(this);
 
         } catch (IOException e) {
 
@@ -307,7 +321,7 @@ public class NewPlayer implements Runnable {
 
     }
 
-    public boolean isGameStarted() {
+    private boolean isGameStarted() {
 
         return gameStarted;
 
@@ -331,11 +345,23 @@ public class NewPlayer implements Runnable {
 
     }
 
-    public boolean checkAllReady() {
+    private boolean checkAllReady() {
 
         return room.getPlayers().stream()
                 .map(NewPlayer::isReady)
                 .reduce(true, (acc, ready) -> acc && ready);
+
+    }
+
+    public boolean isAdmin() {
+
+        return admin;
+
+    }
+
+    public void setAdmin(boolean admin) {
+
+        this.admin = admin;
 
     }
 }
