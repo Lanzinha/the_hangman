@@ -106,9 +106,11 @@ public class NewPlayer implements Runnable {
         showRules(prompt);
         this.ready = true;
 
-        room.getPlayers().stream()
-                .map(NewPlayer::isAdmin)
-                .forEach(System.out::println);
+        room.getPlayers()
+                .forEach(player -> System.out.println(ConsoleColor.RED + "PLAYER #" +
+                        player.getPlayerNumber() + "- " +
+                        player.bracketPlayerName() + ": " +
+                        (player.isAdmin() ? "Admin": "Regular")));
 
         while (!this.gameStarted) {
 
@@ -315,6 +317,14 @@ public class NewPlayer implements Runnable {
 
     }
 
+    private boolean checkAllReady() {
+
+        return room.getPlayers().stream()
+                .map(NewPlayer::isReady)
+                .reduce(true, (acc, ready) -> acc && ready);
+
+    }
+
     public void setRoom(Room room) {
 
         this.room = room;
@@ -345,14 +355,6 @@ public class NewPlayer implements Runnable {
 
     }
 
-    private boolean checkAllReady() {
-
-        return room.getPlayers().stream()
-                .map(NewPlayer::isReady)
-                .reduce(true, (acc, ready) -> acc && ready);
-
-    }
-
     public boolean isAdmin() {
 
         return admin;
@@ -362,6 +364,18 @@ public class NewPlayer implements Runnable {
     public void setAdmin(boolean admin) {
 
         this.admin = admin;
+
+    }
+
+    public int getPlayerNumber() {
+
+        return playerNumber;
+
+    }
+
+    public void setPlayerNumber(int playerNumber) {
+
+        this.playerNumber = playerNumber;
 
     }
 }

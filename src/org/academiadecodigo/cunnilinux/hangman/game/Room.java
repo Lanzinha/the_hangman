@@ -41,7 +41,9 @@ public class Room implements Runnable {
 
     private void awaitGameStart() {
 
-        logger.log(Level.INFO, ConsoleColor.color(ConsoleColor.GREEN_BACKGROUND, ConsoleColor.MAGENTA_BOLD, "Room #" + roomNumber + ": Waiting on game to start..."));
+        logger.log(Level.INFO, ConsoleColor.color(ConsoleColor.GREEN_BACKGROUND,
+                ConsoleColor.MAGENTA_BOLD,
+                "Room #" + roomNumber + ": Waiting on game to start..."));
 
         while (!gameStarted) {
 
@@ -92,15 +94,15 @@ public class Room implements Runnable {
     public synchronized void removePlayer(NewPlayer player) {
 
         logger.log(Level.INFO, ConsoleColor.color(ConsoleColor.GREEN_BACKGROUND,
-                                ConsoleColor.MAGENTA_BOLD,
-                             "Room #" + roomNumber + ": Removing " + player.bracketPlayerName() + " from the room..."));
+                ConsoleColor.MAGENTA_BOLD,
+                "Room #" + roomNumber + ": Removing " + player.bracketPlayerName() + " from the room..."));
         players.remove(player);
 
-        if(players.size() != 0) {
+        if (players.size() != 0) {
 
             players.stream()
                     .map(NewPlayer::isAdmin)
-                    .forEach(System.out::println);
+                    .forEach(admin -> System.out.println("ROOM #" + roomNumber + ": " + (admin ? "Admin" : "Regular")));
 
         } else {
 
