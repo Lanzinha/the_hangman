@@ -68,7 +68,17 @@ public class NewPlayer implements Runnable {
 
             awaitGameStart(prompt);
 
+            room.getPlayers()
+                    .forEach(player -> System.out.println(ConsoleColor.RED + "PLAYER #" +
+                            player.getPlayerNumber() + " - " +
+                            player.bracketPlayerName() + ": " +
+                            (player.isAdmin() ? "Admin" : "Regular")));
+
             while (gameStarted) {
+
+//                logger.log(Level.INFO, ConsoleColor.color(ConsoleColor.WHITE_BACKGROUND_BRIGHT,
+//                        ConsoleColor.RED_BOLD,
+//                        "Game started"));
 
 
             }
@@ -106,11 +116,8 @@ public class NewPlayer implements Runnable {
         showRules(prompt);
         this.ready = true;
 
-        room.getPlayers()
-                .forEach(player -> System.out.println(ConsoleColor.RED + "PLAYER #" +
-                        player.getPlayerNumber() + "- " +
-                        player.bracketPlayerName() + ": " +
-                        (player.isAdmin() ? "Admin": "Regular")));
+        System.out.println(ConsoleColor.RED + "PLAYER #" + getPlayerNumber() + " - " +
+                bracketPlayerName() + ": " + (isAdmin() ? "Admin" : "Regular"));
 
         while (!this.gameStarted) {
 
@@ -131,6 +138,7 @@ public class NewPlayer implements Runnable {
                     case 1:
 
                         sendMessage("\nStarting game...\n");
+                        HangmanTime.sleep(2000);
 
                         if (checkAllReady()) {
 
@@ -146,13 +154,12 @@ public class NewPlayer implements Runnable {
 
                     case 2:
 
-                        sendMessage("\nPlayers connected to the room #" + room.getRoomNumber() + "...\n");
                         showPlayers(prompt);
                         break;
 
                     case 3:
 
-                        sendMessage("\nWaiting for more players... There are currently " + room.getPlayers().size() + "players connected.");
+                        sendMessage("\nWaiting for more players... There are " + room.getPlayers().size() + " players currently connected.");
                         break;
 
                     case 4:
@@ -166,7 +173,7 @@ public class NewPlayer implements Runnable {
 
                 }
 
-                HangmanTime.sleep(1000);
+                HangmanTime.sleep(2000);
 
             }
         }
@@ -179,9 +186,9 @@ public class NewPlayer implements Runnable {
         };
 
         MenuInputScanner menuInputScanner = new MenuInputScanner(menuOptions);
-        menuInputScanner.setMessage(DisplayMessages.header() + "Players connected:\n" +
+        menuInputScanner.setMessage(DisplayMessages.header() + "\nPlayers connected to the room #" + room.getRoomNumber() + ":\n" +
                 room.getPlayers().stream()
-                        .map(player -> bracketPlayerName() + "\n")
+                        .map(player -> "\n\tPlayer #" + player.getPlayerNumber() + " - " + player.bracketPlayerName() + "\n")
                         .reduce("", (acc, name) -> acc + name));
         prompt.getUserInput(menuInputScanner);
 
