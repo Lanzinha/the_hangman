@@ -37,14 +37,12 @@ public class Room implements Runnable {
 
 
 
-
-
         }
     }
 
     private void awaitGameStart() {
 
-        logger.log(Level.INFO, ConsoleColor.color(ConsoleColor.GREEN_BACKGROUND,
+        logger.log(Level.INFO, ConsoleColor.coloredMessage(ConsoleColor.GREEN_BACKGROUND,
                 ConsoleColor.MAGENTA_BOLD,
                 "Room #" + roomNumber + ": Waiting on game to start..."));
 
@@ -55,6 +53,10 @@ public class Room implements Runnable {
         }
 
         startGame();
+
+        logger.log(Level.INFO, ConsoleColor.coloredMessage(ConsoleColor.GREEN_BACKGROUND,
+                ConsoleColor.MAGENTA_BOLD,
+                "Room #" + roomNumber + ": Game started..."));
 
     }
 
@@ -67,7 +69,7 @@ public class Room implements Runnable {
 
     private void awaitPlayers() {
 
-        logger.log(Level.INFO, ConsoleColor.color(ConsoleColor.GREEN_BACKGROUND,
+        logger.log(Level.INFO, ConsoleColor.coloredMessage(ConsoleColor.GREEN_BACKGROUND,
                 ConsoleColor.MAGENTA_BOLD,
                 "Room #" + roomNumber + ": Waiting on players to join the room..."));
 
@@ -96,7 +98,7 @@ public class Room implements Runnable {
 
     public synchronized void removePlayer(NewPlayer player) {
 
-        logger.log(Level.INFO, ConsoleColor.color(ConsoleColor.GREEN_BACKGROUND,
+        logger.log(Level.INFO, ConsoleColor.coloredMessage(ConsoleColor.GREEN_BACKGROUND,
                 ConsoleColor.MAGENTA_BOLD,
                 "Room #" + roomNumber + ": Removing " + player.bracketPlayerName() + " from the room..."));
         players.remove(player);

@@ -25,7 +25,7 @@ public class NewServer {
 
     public NewServer(int portNumber) {
 
-        logger.log(Level.INFO, ConsoleColor.color(ConsoleColor.YELLOW_BACKGROUND, ConsoleColor.GREEN_BOLD, "SERVER: Initializing..."));
+        logger.log(Level.INFO, ConsoleColor.coloredMessage(ConsoleColor.YELLOW_BACKGROUND, ConsoleColor.GREEN_BOLD, "SERVER: Initializing..."));
 
         this.portNumber = portNumber;
         rooms = new CopyOnWriteArrayList<>();
@@ -39,19 +39,19 @@ public class NewServer {
         try {
 
             serverSocket = new ServerSocket(portNumber);
-            logger.log(Level.INFO, ConsoleColor.color(ConsoleColor.YELLOW_BACKGROUND, ConsoleColor.GREEN_BOLD, "SERVER: Bound to " + getAddress()));
+            logger.log(Level.INFO, ConsoleColor.coloredMessage(ConsoleColor.YELLOW_BACKGROUND, ConsoleColor.GREEN_BOLD, "SERVER: Bound to " + getAddress()));
 
             while (!serverSocket.isClosed()) {
 
-                logger.log(Level.INFO, ConsoleColor.color(ConsoleColor.YELLOW_BACKGROUND, ConsoleColor.GREEN_BOLD, "SERVER: Waiting on players to connect..."));
+                logger.log(Level.INFO, ConsoleColor.coloredMessage(ConsoleColor.YELLOW_BACKGROUND, ConsoleColor.GREEN_BOLD, "SERVER: Waiting on players to connect..."));
 
                 serve(serverSocket.accept());
 
             }
         } catch (IOException e) {
 
-            logger.log(Level.SEVERE, ConsoleColor.color(ConsoleColor.RED, "SERVER: Could not bind to port " + portNumber + e.getMessage()));
-            System.err.println(ConsoleColor.color(ConsoleColor.RED, e.getMessage()));
+            logger.log(Level.SEVERE, ConsoleColor.coloredMessage(ConsoleColor.RED, "SERVER: Could not bind to port " + portNumber + e.getMessage()));
+            System.err.println(ConsoleColor.coloredMessage(ConsoleColor.RED, e.getMessage()));
 
             close();
 
@@ -65,7 +65,7 @@ public class NewServer {
         rooms.add(room);
         roomPool.submit(room);
 
-        logger.log(Level.INFO, ConsoleColor.color(ConsoleColor.GREEN_BACKGROUND, ConsoleColor.MAGENTA_BOLD, "Room #" + roomNumber + " has been created"));
+        logger.log(Level.INFO, ConsoleColor.coloredMessage(ConsoleColor.GREEN_BACKGROUND, ConsoleColor.MAGENTA_BOLD, "Room #" + roomNumber + " has been created"));
 
     }
 
@@ -98,8 +98,8 @@ public class NewServer {
 
         } catch (UnknownHostException e) {
 
-            logger.log(Level.SEVERE, ConsoleColor.color(ConsoleColor.RED, "SERVER: Unable to get local address" + e.getMessage()));
-            System.err.println(ConsoleColor.color(ConsoleColor.RED, e.getMessage()));
+            logger.log(Level.SEVERE, ConsoleColor.coloredMessage(ConsoleColor.RED, "SERVER: Unable to get local address" + e.getMessage()));
+            System.err.println(ConsoleColor.coloredMessage(ConsoleColor.RED, e.getMessage()));
 
             ipAddress = serverSocket.getInetAddress().getHostAddress();
 
@@ -129,8 +129,8 @@ public class NewServer {
 
         } catch (IOException e) {
 
-            logger.log(Level.SEVERE, ConsoleColor.color(ConsoleColor.RED, "SERVER: Unable to close the socket" + e.getMessage()));
-            System.err.println(ConsoleColor.color(ConsoleColor.RED, e.getMessage()));
+            logger.log(Level.SEVERE, ConsoleColor.coloredMessage(ConsoleColor.RED, "SERVER: Unable to close the socket" + e.getMessage()));
+            System.err.println(ConsoleColor.coloredMessage(ConsoleColor.RED, e.getMessage()));
 
         }
 

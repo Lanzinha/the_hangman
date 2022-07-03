@@ -90,13 +90,13 @@ public enum ConsoleColor {
 
     }
 
-    public static String color(ConsoleColor foreGround, String text) {
+    public static String coloredMessage(ConsoleColor foreGround, String text) {
 
         return foreGround + text + ConsoleColor.RESET;
 
     }
 
-    public static String color(ConsoleColor backGround, ConsoleColor foreGround, String text) {
+    public static String coloredMessage(ConsoleColor backGround, ConsoleColor foreGround, String text) {
 
         return backGround + "" + foreGround + text + ConsoleColor.RESET;
 

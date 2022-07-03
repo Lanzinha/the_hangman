@@ -25,6 +25,7 @@ public class NewPlayer implements Runnable {
     private boolean ready;
     private BufferedReader inputBufferedReader;
     private PrintWriter outputPrintWriter;
+    private boolean playerTurn;
 
     public NewPlayer(Socket playerSocket, Room room, int playerNumber) {
 
@@ -41,8 +42,8 @@ public class NewPlayer implements Runnable {
 
         } catch (IOException e) {
 
-            logger.log(Level.SEVERE, ConsoleColor.color(ConsoleColor.RED, "PLAYER: Unable to initialize I/O streams " + e.getMessage()));
-            System.err.println(ConsoleColor.color(ConsoleColor.RED, e.getMessage()));
+            logger.log(Level.SEVERE, ConsoleColor.coloredMessage(ConsoleColor.RED, "PLAYER: Unable to initialize I/O streams " + e.getMessage()));
+            System.err.println(ConsoleColor.coloredMessage(ConsoleColor.RED, e.getMessage()));
 
             close();
 
@@ -68,31 +69,43 @@ public class NewPlayer implements Runnable {
 
             awaitGameStart(prompt);
 
-            room.getPlayers()
-                    .forEach(player -> System.out.println(ConsoleColor.RED + "Room #" + room.getRoomNumber() +
-                            " - PLAYER #" +
-                            player.getPlayerNumber() + " - " +
-                            player.bracketPlayerName() + ": " +
-                            (player.isAdmin() ? "Admin" : "Regular")));
-
             while (gameStarted) {
 
+                logger.log(Level.INFO, ConsoleColor.coloredMessage(ConsoleColor.WHITE_BACKGROUND_BRIGHT,
+                                                                   ConsoleColor.RED_BOLD,
+                                                                "Room #" + room.getRoomNumber() +
+                                                                    " - PLAYER #" +
+                                                                    getPlayerNumber() + " - " +
+                                                                    bracketPlayerName() + ": " +
+                                                                    (isAdmin() ? "Admin" : "Regular") +
+                                                                    " - Game started"));
 
-//                logger.log(Level.INFO, ConsoleColor.color(ConsoleColor.WHITE_BACKGROUND_BRIGHT,
-//                        ConsoleColor.RED_BOLD,
-//                        "Game started"));
+                prompt.displayMessage(logo);
+                awaitPlayerTurn();
+
+
 
 
             }
 
         } catch (IOException e) {
 
-            logger.log(Level.SEVERE, ConsoleColor.color(ConsoleColor.RED, "PLAYER: Unable to initialize I/O streams " + e.getMessage()));
-            System.err.println(ConsoleColor.color(ConsoleColor.RED, e.getMessage()));
+            logger.log(Level.SEVERE, ConsoleColor.coloredMessage(ConsoleColor.RED, "PLAYER: Unable to initialize I/O streams " + e.getMessage()));
+            System.err.println(ConsoleColor.coloredMessage(ConsoleColor.RED, e.getMessage()));
 
             close();
 
         }
+    }
+
+    private void awaitPlayerTurn() {
+
+        while(!playerTurn) {
+
+            HangmanTime.sleep(100);
+
+        }
+
     }
 
     private void setName(Prompt prompt) {
@@ -102,7 +115,7 @@ public class NewPlayer implements Runnable {
         name.setMessage("Please input your name: \n\n> ");
         playerName = prompt.getUserInput(name).trim();
 
-        logger.log(Level.INFO, ConsoleColor.color(ConsoleColor.WHITE_BACKGROUND_BRIGHT,
+        logger.log(Level.INFO, ConsoleColor.coloredMessage(ConsoleColor.WHITE_BACKGROUND_BRIGHT,
                 ConsoleColor.RED_BOLD,
                 "PLAYER #" + playerNumber + " - " + bracketPlayerName() + ":" + " Joined the room #" + room.getRoomNumber()));
 
@@ -117,9 +130,6 @@ public class NewPlayer implements Runnable {
 
         showRules(prompt);
         ready = true;
-
-        System.out.println(ConsoleColor.RED + "PLAYER #" + getPlayerNumber() + " - " +
-                bracketPlayerName() + ": " + (isAdmin() ? "Admin" : "Regular"));
 
         while (!gameStarted) {
 
@@ -140,7 +150,7 @@ public class NewPlayer implements Runnable {
                     case 1:
 
                         sendMessage("\nStarting game...\n");
-                        HangmanTime.sleep(2000);
+                        HangmanTime.sleep(1000);
 
                         if (checkAllReady()) {
 
@@ -174,11 +184,20 @@ public class NewPlayer implements Runnable {
                         break;
 
                 }
-
-                HangmanTime.sleep(2000);
-
             }
+
+            HangmanTime.sleep(1000);
+
         }
+
+      /*  System.out.println(ConsoleColor.coloredMessage(ConsoleColor.WHITE_BACKGROUND_BRIGHT,
+                                                       ConsoleColor.RED_BOLD,
+                                                  "PLAYER #" + getPlayerNumber() + " - " +
+                                                          bracketPlayerName() + ": " +
+                                                          (isAdmin() ? "Admin" : "Regular") +
+                                                          " - Leaving the await game start loop!!!"));
+*/
+
     }
 
     private void showPlayers(Prompt prompt) {
@@ -220,11 +239,11 @@ public class NewPlayer implements Runnable {
         switch (prompt.getUserInput(stringInputScanner)) {
 
             case 1:
-                sendMessage("\nLet's play fellow " + bracketPlayerName() + "!\n");
+                sendMessage("\nLet's play " + bracketPlayerName() + "!\n");
                 break;
 
             case 2:
-                sendMessage("\nGoodbye fellow " + bracketPlayerName() + "!\n");
+                sendMessage("\nGoodbye " + bracketPlayerName() + "!\n");
                 close();
                 break;
 
@@ -261,16 +280,14 @@ public class NewPlayer implements Runnable {
             Thread.sleep(sleepTime);
             sendMessage("                     5: The player with more words completed, wins the game.\n\n");
             Thread.sleep(sleepTime);
-            sendMessage(ConsoleColor.YELLOW + "                     To quit the game while playing, write /quit\n\n");
-            Thread.sleep(sleepTime);
             sendMessage(ConsoleColor.RED + "                     GO AHEAD & HAVE SOME FUN WITH THIS AMAZING GAME!!!");
             Thread.sleep(sleepTime);
             sendMessage(String.valueOf(ConsoleColor.RESET));
 
         } catch (InterruptedException e) {
 
-            System.err.println(ConsoleColor.color(ConsoleColor.RED, e.getMessage()));
-            logger.log(Level.WARNING, ConsoleColor.color(ConsoleColor.RED, "ERROR - Thread failure " + e.getMessage()));
+            System.err.println(ConsoleColor.coloredMessage(ConsoleColor.RED, e.getMessage()));
+            logger.log(Level.WARNING, ConsoleColor.coloredMessage(ConsoleColor.RED, "ERROR - Thread failure " + e.getMessage()));
 
         }
     }
@@ -297,7 +314,7 @@ public class NewPlayer implements Runnable {
             }
             if (playerSocket != null) {
 
-                logger.log(Level.INFO, ConsoleColor.color(ConsoleColor.WHITE_BACKGROUND_BRIGHT,
+                logger.log(Level.INFO, ConsoleColor.coloredMessage(ConsoleColor.WHITE_BACKGROUND_BRIGHT,
                         ConsoleColor.RED_BOLD,
                         "Room #" + room.getRoomNumber() + " - PLAYER #" + playerNumber + " - " + bracketPlayerName() + ": " + "Closing client socket for " + getAddress()));
                 playerSocket.close();
@@ -308,8 +325,8 @@ public class NewPlayer implements Runnable {
 
         } catch (IOException e) {
 
-            System.err.println(ConsoleColor.color(ConsoleColor.RED, e.getMessage()));
-            logger.log(Level.WARNING, ConsoleColor.color(ConsoleColor.RED, "ERROR - Unable to close I/O streams" + e.getMessage()));
+            System.err.println(ConsoleColor.coloredMessage(ConsoleColor.RED, e.getMessage()));
+            logger.log(Level.WARNING, ConsoleColor.coloredMessage(ConsoleColor.RED, "ERROR - Unable to close I/O streams" + e.getMessage()));
 
         }
     }
@@ -340,7 +357,7 @@ public class NewPlayer implements Runnable {
 
     }
 
-    private boolean isGameStarted() {
+    public boolean isGameStarted() {
 
         return gameStarted;
 
@@ -385,6 +402,12 @@ public class NewPlayer implements Runnable {
     public void setPlayerNumber(int playerNumber) {
 
         this.playerNumber = playerNumber;
+
+    }
+
+    public void setPlayerTurn(boolean playerTurn) {
+
+        this.playerTurn = playerTurn;
 
     }
 }

@@ -12,7 +12,7 @@ public class DisplayMessages {
 
     public static String logo() {
 
-        return ConsoleColor.color(ConsoleColor.GREEN_BOLD, LOGO);
+        return ConsoleColor.coloredMessage(ConsoleColor.GREEN_BOLD, LOGO);
 
     }
 
