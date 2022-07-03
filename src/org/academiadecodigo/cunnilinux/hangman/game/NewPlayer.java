@@ -69,12 +69,14 @@ public class NewPlayer implements Runnable {
             awaitGameStart(prompt);
 
             room.getPlayers()
-                    .forEach(player -> System.out.println(ConsoleColor.RED + "PLAYER #" +
+                    .forEach(player -> System.out.println(ConsoleColor.RED + "Room #" + room.getRoomNumber() +
+                            " - PLAYER #" +
                             player.getPlayerNumber() + " - " +
                             player.bracketPlayerName() + ": " +
                             (player.isAdmin() ? "Admin" : "Regular")));
 
             while (gameStarted) {
+
 
 //                logger.log(Level.INFO, ConsoleColor.color(ConsoleColor.WHITE_BACKGROUND_BRIGHT,
 //                        ConsoleColor.RED_BOLD,
@@ -114,12 +116,12 @@ public class NewPlayer implements Runnable {
     private void awaitGameStart(Prompt prompt) {
 
         showRules(prompt);
-        this.ready = true;
+        ready = true;
 
         System.out.println(ConsoleColor.RED + "PLAYER #" + getPlayerNumber() + " - " +
                 bracketPlayerName() + ": " + (isAdmin() ? "Admin" : "Regular"));
 
-        while (!this.gameStarted) {
+        while (!gameStarted) {
 
             if (admin) {
 
