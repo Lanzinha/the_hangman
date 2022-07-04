@@ -4,7 +4,8 @@ import org.academiadecodigo.cunnilinux.hangman.ui.ConsoleColor;
 
 public class Hangman {
     private static volatile int lives = 6;
-    private String imgHangman = " _____\n" +
+    private String imgHangman =
+            " _____\n" +
             " |/\n" +
             " |\n" +
             " |\n" +
