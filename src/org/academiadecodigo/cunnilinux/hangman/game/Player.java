@@ -64,9 +64,9 @@ public class Player implements Runnable {
 
         Chronometer chronometer = new Chronometer();
 
-        Words words = new Words();
-        String randomWord = words.getRandomWord();
-        String hint = words.getHint(randomWord);
+        WordList wordList = new WordList();
+        String randomWord = wordList.getRandomWord();
+        String hint = wordList.getHint(randomWord);
         randomWord = randomWord.toUpperCase();
 
         char[] charArrWord = randomWord.toCharArray();

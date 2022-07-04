@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 public class Room implements Runnable {
 
     private final Logger logger = Logger.getLogger(this.getClass().getSimpleName());
-    public final int ROOM_SIZE = 2;
+    public static final int ROOM_CAPACITY = 2;
     private int roomNumber;
     private CopyOnWriteArrayList<NewPlayer> players;
     private ExecutorService playerPool;
@@ -23,7 +23,7 @@ public class Room implements Runnable {
 
         this.roomNumber = roomNumber;
         this.players = new CopyOnWriteArrayList<>();
-        this.playerPool = Executors.newFixedThreadPool(ROOM_SIZE);
+        this.playerPool = Executors.newFixedThreadPool(ROOM_CAPACITY);
         this.gameStarted = false;
 
     }
@@ -32,6 +32,8 @@ public class Room implements Runnable {
 
         awaitPlayers();
         awaitGameStart();
+
+
 
         while (gameStarted) {
 
@@ -73,11 +75,15 @@ public class Room implements Runnable {
                 ConsoleColor.MAGENTA_BOLD,
                 "Room #" + roomNumber + ": Waiting on players to join the room..."));
 
-        while (this.players.size() < ROOM_SIZE && !gameStarted) {
+        while (this.players.size() < ROOM_CAPACITY && !gameStarted) {
 
             HangmanTime.sleep(1000);
 
         }
+
+        logger.log(Level.INFO, ConsoleColor.coloredMessage(ConsoleColor.GREEN_BACKGROUND,
+                ConsoleColor.MAGENTA_BOLD,
+                "Room #" + roomNumber + " is full... Starting game now..."));
 
     }
 
@@ -131,7 +137,7 @@ public class Room implements Runnable {
 
     public int getMaxRoomSize() {
 
-        return ROOM_SIZE;
+        return ROOM_CAPACITY;
 
     }
 

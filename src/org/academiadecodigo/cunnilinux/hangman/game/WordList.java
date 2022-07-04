@@ -2,30 +2,30 @@ package org.academiadecodigo.cunnilinux.hangman.game;
 
 import java.util.*;
 
-public class Words {
+public class WordList {
 
-    HashMap<String, String> words = new HashMap<String, String>();
+    HashMap<String, String> wordList = new HashMap<String, String>();
 
-    public Words() {
+    public WordList() {
 
-        words.put("programming", "HINT: Your word is related with programming.");
-        words.put("abstraction", "HINT: Your word is related with programming.");
-        words.put("polymorphism", "HINT: Your word is related with programming.");
-        words.put("apple", "HINT: Your word is related with computers brands.");
-        words.put("windows", "HINT: Your word is related with software brands.");
-        words.put("ibm", "HINT: Your word is related with computers brands.");
-        words.put("lenovo", "HINT: Your word is related with computer brands.");
-        words.put("java", "HINT: Your word is related with programming languages.");
-        words.put("python", "HINT: Your word is related with programming languages.");
-        words.put("javascript", "HINT: Your word is related with programming languages.");
-        words.put("sql", "HINT: Your word is related with programming languages.");
+        wordList.put("programming", "HINT: Your word is related with programming.");
+        wordList.put("abstraction", "HINT: Your word is related with programming.");
+        wordList.put("polymorphism", "HINT: Your word is related with programming.");
+        wordList.put("apple", "HINT: Your word is related with computers brands.");
+        wordList.put("windows", "HINT: Your word is related with software brands.");
+        wordList.put("ibm", "HINT: Your word is related with computers brands.");
+        wordList.put("lenovo", "HINT: Your word is related with computer brands.");
+        wordList.put("java", "HINT: Your word is related with programming languages.");
+        wordList.put("python", "HINT: Your word is related with programming languages.");
+        wordList.put("javascript", "HINT: Your word is related with programming languages.");
+        wordList.put("sql", "HINT: Your word is related with programming languages.");
 
     }
 
     public String getRandomWord() {
 
-        Set<String> keySet = words.keySet();
-        List<String> keyList = new ArrayList<>(keySet);
+        //Set<String> keySet = wordList.keySet();
+        List<String> keyList = new ArrayList<>(wordList.keySet());
 
         int randIdx = new Random().nextInt(keyList.size());
 
@@ -34,13 +34,13 @@ public class Words {
 
     public int getSize() {
 
-        return words.size();
+        return wordList.size();
 
     }
 
     public String getHint(String word) {
 
-        return words.get(word);
+        return wordList.get(word);
 
     }
 }
