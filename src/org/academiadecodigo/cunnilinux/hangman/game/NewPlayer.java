@@ -56,7 +56,7 @@ public class NewPlayer implements Runnable {
         try {
 
             Prompt prompt = new Prompt(playerSocket.getInputStream(),
-                    new PrintStream(playerSocket.getOutputStream()));
+                                       new PrintStream(playerSocket.getOutputStream()));
 
             StringInputScanner logo = new StringInputScanner();
             logo.setMessage(DisplayMessages.header());
