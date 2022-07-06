@@ -1,6 +1,6 @@
 package org.academiadecodigo.cunnilinux.hangman.game;
 
-import main.java.org.academiadecodigo.bootcamp.scanners.string.HangmanStringInputScanner;
+import org.academiadecodigo.bootcamp.scanners.string.HangmanStringInputScanner;
 import org.academiadecodigo.bootcamp.Prompt;
 import org.academiadecodigo.bootcamp.scanners.string.StringInputScanner;
 import org.academiadecodigo.cunnilinux.hangman.ui.AsciiArt;
